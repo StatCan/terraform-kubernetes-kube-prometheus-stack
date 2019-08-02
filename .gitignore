@@ -1,0 +1,6 @@
+kubeconfig
+plan
+**/.terraform/*
+.terraform/plugins
+*.tfstate
+*.tfstate.backup
