@@ -24,7 +24,7 @@ resource "null_resource" "wait-dependencies" {
 resource "helm_release" "prometheus_operator" {
   depends_on = ["null_resource.wait-dependencies", "null_resource.dependency_getter"]
   name = "prometheus-operator"
-  repository = "artifactory"
+  repository = "${var.helm_repository}"
   chart = "prometheus-operator"
   version = "${var.chart_version}"
   namespace = "${var.helm_namespace}"
