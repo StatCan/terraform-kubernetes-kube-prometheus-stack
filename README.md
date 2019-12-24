@@ -10,7 +10,11 @@ The following security controls can be met through configuration of this templat
 
 * TBD
 
-## Dependancies
+## Dependencies
+
+* None
+
+## Optional (depending on options configured):
 
 * None
 
@@ -51,6 +55,7 @@ EOF
 
 ## History
 
-| Date     | Release    | Change      |
-| -------- | ---------- | ----------- |
-| 20190909 | 20190909.1 | 1st release |
+| Date     | Release    | Change                                                     |
+| -------- | ---------- | ---------------------------------------------------------- |
+| 20190729 | 20190729.1 | Improvements to documentation and formatting               |
+| 20190909 | 20190909.1 | 1st release                                                |
