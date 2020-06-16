@@ -30,7 +30,6 @@ module "helm_prometheus_operator" {
     "${module.helm_istio.depended_on}",
   ]
 
-  helm_service_account = "${module.namespace_monitoring.helm_service_account}"
   helm_namespace = "${module.namespace_monitoring.name}"
   helm_repository = "stable"
 
@@ -46,7 +45,6 @@ EOF
 | -------------------- | ------ | -------- | --------------------------------------------------- |
 | chart_version        | string | yes      | Version of the Helm Chart                           |
 | dependencies         | string | yes      | Dependency name refering to namespace module        |
-| helm_service_account | string | yes      | The service account for Helm to use                 |
 | helm_namespace       | string | yes      | The namespace Helm will install the chart under     |
 | helm_repository      | string | yes      | The repository where the Helm chart is stored       |
 | resource_id          | string | yes      | The resource id to be used for the Managed Identity |
@@ -59,3 +57,4 @@ EOF
 | -------- | ---------- | ---------------------------------------------------------- |
 | 20190729 | 20190729.1 | Improvements to documentation and formatting               |
 | 20190909 | 20190909.1 | 1st release                                                |
+| 20200616 | v2.0.0     | Helm 3 modifications                                       |
