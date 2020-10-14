@@ -7,7 +7,7 @@
 # module:
 resource "null_resource" "dependency_getter" {
   triggers = {
-    my_dependencies = "${join(",", var.dependencies)}"
+    my_dependencies = join(",", var.dependencies)
   }
 
   lifecycle {
@@ -20,14 +20,18 @@ resource "null_resource" "dependency_getter" {
 resource "helm_release" "prometheus_operator" {
   depends_on = ["null_resource.dependency_getter"]
   name       = "prometheus-operator"
-  repository = "${var.helm_repository}"
+
+  repository          = var.helm_repository
+  repository_username = var.helm_repository_username
+  repository_password = var.helm_repository_password
+
   chart      = "prometheus-operator"
-  version    = "${var.chart_version}"
-  namespace  = "${var.helm_namespace}"
+  version    = var.chart_version
+  namespace  = var.helm_namespace
   timeout    = 1200
 
   values = [
-    "${var.values}",
+    var.values,
   ]
 }
 
