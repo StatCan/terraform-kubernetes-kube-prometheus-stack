@@ -26,11 +26,11 @@ module "helm_prometheus_operator" {
 
   chart_version = "0.0.2"
   dependencies = [
-    "${module.namespace_monitoring.depended_on}",
-    "${module.helm_istio.depended_on}",
+    module.namespace_monitoring.depended_on,
+    module.helm_istio.depended_on,
   ]
 
-  helm_namespace  = "${module.namespace_monitoring.name}"
+  helm_namespace  = module.namespace_monitoring.name
   helm_repository = "stable"
 
   values = <<EOF
