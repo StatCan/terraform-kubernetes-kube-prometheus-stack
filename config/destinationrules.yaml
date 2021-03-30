@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: ${ helm_release }-prometheus-node-exporter
+  namespace: ${ helm_namespace }
+spec:
+  host: ${ helm_release }-prometheus-node-exporter.${ helm_namespace }.svc.${ cluster_domain }
+  trafficPolicy:
+    tls:
+      mode: ${ destinationrules_mode }
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: ${ helm_release }-kube-p-prometheus
+  namespace: ${ helm_namespace }
+spec:
+  host: ${ helm_release }-kube-p-prometheus.${ helm_namespace }.svc.${ cluster_domain }
+  trafficPolicy:
+    tls:
+      mode: ${ destinationrules_mode }
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: ${ helm_release }-kube-p-alertmanager
+  namespace: ${ helm_namespace }
+spec:
+  host: ${ helm_release }-kube-p-alertmanager.${ helm_namespace }.svc.${ cluster_domain }
+  trafficPolicy:
+    tls:
+      mode: ${ destinationrules_mode }
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: ${ helm_release }-grafana
+  namespace: ${ helm_namespace }
+spec:
+  host: ${ helm_release }-grafana.${ helm_namespace }.svc.${ cluster_domain }
+  trafficPolicy:
+    tls:
+      mode: ${ destinationrules_mode }
