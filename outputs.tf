@@ -3,7 +3,7 @@ output "helm_namespace" {
 }
 
 output "status" {
-  value = helm_release.prometheus_operator.id
+  value = helm_release.kube_prometheus_stack.id
 }
 
 # Part of a hack for module-to-module dependencies.
