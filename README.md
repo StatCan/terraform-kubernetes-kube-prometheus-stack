@@ -34,7 +34,8 @@ module "helm_kube_prometheus_stack" {
   helm_release    = "kube-prometheus-stack"
   helm_repository = "https://prometheus-community.github.io/helm-charts"
 
-  enable_destinationrules = 1
+  enable_destinationrules = true
+  enable_prometheusrules  = true
 
   values = <<EOF
 
@@ -52,14 +53,17 @@ EOF
 | chart_version            | string | yes      | Version of the Helm chart                                     |
 | dependencies             | string | yes      | Dependency name referring to namespace module                 |
 | helm_namespace           | string | yes      | The namespace Helm will install the chart under               |
-| helm_release             | string | no       | The name of the Helm release                                  |
+| helm_release             | string | no       | The name of the Helm release. Default `kube-prometheus-stack` |
 | helm_repository          | string | no       | The repository where the Helm chart is stored                 |
 | helm_repository_username | string | no       | The username of the repository where the Helm chart is stored |
 | helm_repository_password | string | no       | The password of the repository where the Helm chart is stored |
-| enable_destinationrules  | string | no       | For Prometheus, Alertmanager, Grafana, and Node Exporters     |
+| enable_destinationrules  | bool   | no       | For Prometheus, Alertmanager, Grafana, and Node Exporters     |
 | destinationrules_mode    | string | no       | DestinationRule TLS mode. Default `DISABLE`                   |
+| destinationrules_prefix  | string | no       | Set to Prom/AM svc prefix if using non-default helm_release   |
 | cluster_domain           | string | no       | Cluster domain for DestinationRules. Default `cluster.local`  |
-| values                   | list   | no       | Values to be passed to the Helm chart                         |
+| enable_prometheusrules   | bool   | no       | Adds Prometheus Rules for general platform alerts             |
+| prometheus_pvc_name      | string | no       | Used for storage alert. Set if using non-default helm_release |
+| values                   | list   | no       | Values to be passed to the Helm Chart                         |
 
 ## History
 

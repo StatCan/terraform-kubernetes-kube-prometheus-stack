@@ -12,10 +12,10 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: ${ helm_release }-kube-p-prometheus
+  name: ${ destinationrules_prefix }-prometheus
   namespace: ${ helm_namespace }
 spec:
-  host: ${ helm_release }-kube-p-prometheus.${ helm_namespace }.svc.${ cluster_domain }
+  host: ${ destinationrules_prefix }-prometheus.${ helm_namespace }.svc.${ cluster_domain }
   trafficPolicy:
     tls:
       mode: ${ destinationrules_mode }
@@ -23,10 +23,10 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: ${ helm_release }-kube-p-alertmanager
+  name: ${ destinationrules_prefix }-alertmanager
   namespace: ${ helm_namespace }
 spec:
-  host: ${ helm_release }-kube-p-alertmanager.${ helm_namespace }.svc.${ cluster_domain }
+  host: ${ destinationrules_prefix }-alertmanager.${ helm_namespace }.svc.${ cluster_domain }
   trafficPolicy:
     tls:
       mode: ${ destinationrules_mode }

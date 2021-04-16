@@ -38,10 +38,11 @@ resource "helm_release" "kube_prometheus_stack" {
 resource "local_file" "kube_prometheus_stack_destinationrules" {
   count = var.enable_destinationrules ? 1 : 0
   sensitive_content = templatefile("${path.module}/config/destinationrules.yaml", {
-    helm_release          = var.helm_release
-    helm_namespace        = var.helm_namespace
-    destinationrules_mode = var.destinationrules_mode
-    cluster_domain        = var.cluster_domain
+    helm_release            = var.helm_release
+    helm_namespace          = var.helm_namespace
+    destinationrules_mode   = var.destinationrules_mode
+    destinationrules_prefix = var.destinationrules_prefix
+    cluster_domain          = var.cluster_domain
   })
 
   filename = "${path.module}/kube-prometheus-stack-destinationrules.yaml"
@@ -65,6 +66,49 @@ resource "null_resource" "apply_destinationrules" {
   provisioner "local-exec" {
     when       = destroy
     command    = "kubectl -n ${self.triggers.namespace} delete -f - <<EOF\n${self.triggers.manifests}\nEOF"
+    on_failure = continue
+  }
+}
+
+resource "local_file" "kube_prometheus_stack_general_platform_alerts" {
+  count = var.enable_prometheusrules ? 1 : 0
+  sensitive_content = templatefile("${path.module}/config/general-platform-alerts.yaml", {
+    helm_release        = var.helm_release
+    helm_namespace      = var.helm_namespace
+    prometheus_pvc_name = var.prometheus_pvc_name
+  })
+
+  filename = "${path.module}/kube-prometheus-stack-general-platform-alerts.yaml"
+}
+
+resource "null_resource" "apply_general_platform_alerts" {
+  count = var.enable_prometheusrules ? 1 : 0
+  depends_on = [
+    null_resource.dependency_getter,
+    local_file.kube_prometheus_stack_general_platform_alerts[0]
+  ]
+  triggers = {
+    manifest = local_file.kube_prometheus_stack_general_platform_alerts[0].sensitive_content
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl -n ${var.helm_namespace} apply -f ${local_file.kube_prometheus_stack_general_platform_alerts[0].filename}"
+  }
+}
+
+resource "null_resource" "delete_general_platform_alerts" {
+  count = var.enable_prometheusrules ? 1 : 0
+  depends_on = [
+    null_resource.dependency_getter,
+    local_file.kube_prometheus_stack_general_platform_alerts[0]
+  ]
+  triggers = {
+    namespace = var.helm_namespace
+  }
+
+  provisioner "local-exec" {
+    when       = destroy
+    command    = "kubectl -n ${self.triggers.namespace} delete prometheusrule general-platform-alerts"
     on_failure = continue
   }
 }
