@@ -113,6 +113,48 @@ resource "null_resource" "delete_general_platform_alerts" {
   }
 }
 
+resource "local_file" "kube_prometheus_stack_general_project_alerts" {
+  count = var.enable_prometheusrules ? 1 : 0
+  sensitive_content = templatefile("${path.module}/config/general-project-alerts.yaml", {
+    helm_release   = var.helm_release
+    helm_namespace = var.helm_namespace
+  })
+
+  filename = "${path.module}/kube-prometheus-stack-general-project-alerts.yaml"
+}
+
+resource "null_resource" "apply_general_project_alerts" {
+  count = var.enable_prometheusrules ? 1 : 0
+  depends_on = [
+    null_resource.dependency_getter,
+    local_file.kube_prometheus_stack_general_project_alerts[0]
+  ]
+  triggers = {
+    manifest = local_file.kube_prometheus_stack_general_project_alerts[0].sensitive_content
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl -n ${var.helm_namespace} apply -f ${local_file.kube_prometheus_stack_general_project_alerts[0].filename}"
+  }
+}
+
+resource "null_resource" "delete_general_project_alerts" {
+  count = var.enable_prometheusrules ? 1 : 0
+  depends_on = [
+    null_resource.dependency_getter,
+    local_file.kube_prometheus_stack_general_project_alerts[0]
+  ]
+  triggers = {
+    namespace = var.helm_namespace
+  }
+
+  provisioner "local-exec" {
+    when       = destroy
+    command    = "kubectl -n ${self.triggers.namespace} delete prometheusrule general-project-alerts"
+    on_failure = continue
+  }
+}
+
 # Part of a hack for module-to-module dependencies.
 # https://github.com/hashicorp/terraform/issues/1178#issuecomment-449158607
 resource "null_resource" "dependency_setter" {

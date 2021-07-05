@@ -61,15 +61,16 @@ EOF
 | destinationrules_mode    | string | no       | DestinationRule TLS mode. Default `DISABLE`                   |
 | destinationrules_prefix  | string | no       | Set to Prom/AM svc prefix if using non-default helm_release   |
 | cluster_domain           | string | no       | Cluster domain for DestinationRules. Default `cluster.local`  |
-| enable_prometheusrules   | bool   | no       | Adds Prometheus Rules for general platform alerts             |
+| enable_prometheusrules   | bool   | no       | Adds Prometheus Rules for general platform and project alerts |
 | prometheus_pvc_name      | string | no       | Used for storage alert. Set if using non-default helm_release |
 | values                   | list   | no       | Values to be passed to the Helm Chart                         |
 
 ## History
 
-| Date     | Release    | Change      |
-| -------- | ---------- | ----------- |
-| 20210326 | v1.0.0     | 1st release |
+| Date     | Release    | Change                            |
+| -------- | ---------- | --------------------------------- |
+| 20210326 | v1.0.0     | 1st release                       |
+| 20210705 | v1.1.0     | 1st set of general project alerts |
 
 ## Previous Module
 

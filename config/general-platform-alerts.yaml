@@ -34,7 +34,7 @@ spec:
   - name: meta-alerts.rules
     rules:
     - record: alerts_firing
-      expr: sum without (alertname, alertstate) (label_replace(ALERTS{alertstate="firing",alertname!="ManyAlertsFiring",alertname!="ManyManyAlertsFiring"}, "alertfiring", "$1", "alertname", "(.*)"))
+      expr: sum without (alertname, alertstate) (label_replace(ALERTS{alertstate="firing",alertname!~"ManyAlertsFiring|ManyManyAlertsFiring|KubeJobCompletion|KubeJobFailed"}, "alertfiring", "$1", "alertname", "(.*)"))
     - alert: ManyManyAlertsFiring
       expr: sum by(alertfiring, namespace) (alerts_firing) > 50
       for: 2m
