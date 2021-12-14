@@ -39,8 +39,16 @@ spec:
         severity: major
       annotations:
         message: 'Pod {{ $labels.namespace }}/{{ $labels.pod }} has been in a non-ready state for longer than 15 minutes.'
-  - name: project-jobs.rules
+  - name: jobs.rules
     rules:
+    - alert: CompletedJobsNotCleared
+      expr: count by (namespace) (kube_job_status_completion_time < (time() - 86400)) > 20
+      for: 15m
+      labels:
+        severity: major
+        scope: project
+      annotations:
+        message: 'Namespace {{ $labels.namespace }} has {{ $value }} completed jobs older than 24h.'
     - alert: JobFailed
       expr: sum by(namespace, job_name) (kube_job_failed > 0)
       for: 15m

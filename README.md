@@ -67,10 +67,11 @@ EOF
 
 ## History
 
-| Date     | Release    | Change                            |
-| -------- | ---------- | --------------------------------- |
-| 20210326 | v1.0.0     | 1st release                       |
-| 20210705 | v1.1.0     | 1st set of general project alerts |
+| Date       | Release    | Change                                           |
+| ---------- | ---------- | ------------------------------------------------ |
+| 2021-03-26 | v1.0.0     | 1st release                                      |
+| 2021-07-05 | v1.1.0     | 1st set of general project alerts                |
+| 2021-09-07 | v1.1.1     | `CompletedJobsNotCleared` scope set to `project` | 
 
 ## Previous Module
 
