@@ -27,15 +27,15 @@ variable "enable_destinationrules" {
   default     = false
   description = "Creates DestinationRules for Prometheus, Alertmanager, Grafana, and Node Exporters"
 }
-variable "destinationrules_prefix" {
-  type        = string
-  default     = "kube-prometheus-stack"
-  description = "Set to Prom/AM svc prefix if using non-default helm_release"
-}
 variable "destinationrules_mode" {
   type        = string
   default     = "DISABLE"
   description = "DestionationRule TLS mode"
+}
+variable "destinationrules_labels" {
+  type        = map(string)
+  default     = {}
+  description = "Labels applied to DestinationRules"
 }
 variable "cluster_domain" {
   type        = string
@@ -43,20 +43,34 @@ variable "cluster_domain" {
   description = "Cluster domain for DestinationRules"
 }
 
+
 variable "enable_prometheusrules" {
   type        = bool
   default     = false
-  description = "Adds Prometheus Rules for general platform alerts"
+  description = "Adds PrometheusRules for general cluster and namespace alerts"
+}
+variable "prometheusrules_labels" {
+  type = map(string)
+  default = {
+    app     = "kube-prometheus-stack"
+    release = "kube-prometheus-stack"
+  }
+  description = "The labels of PrometheusRules for general cluster and namespace alerts"
+}
+variable "cluster_rules_name" {
+  type        = string
+  default     = "general-cluster-alerts"
+  description = "PrometheusRule name for general cluster alerts"
+}
+variable "namespace_rules_name" {
+  type        = string
+  default     = "general-namespace-alerts"
+  description = "PrometheusRule name for general namespace alerts"
 }
 variable "prometheus_pvc_name" {
   type        = string
   default     = "prometheus-kube-prometheus-stack-prometheus-db-prometheus-kube-prometheus-stack-prometheus-0"
   description = "Used for storage alert. Set if using non-default helm_release"
-}
-
-variable "dependencies" {
-  type        = list
-  description = "List of terraform module dependencies, such as the namespace module"
 }
 
 variable "values" {
