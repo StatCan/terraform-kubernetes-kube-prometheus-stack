@@ -83,6 +83,7 @@ EOF
 | 2021-07-05 | v1.1.0     | 1st set of general project alerts                                                                                 |
 | 2021-09-07 | v1.1.1     | `CompletedJobsNotCleared` scope set to `project`                                                                  | 
 | 2022-03-16 | v2.0.0     | Convert DestinationRules and PrometheusRules to `kubernetes_manifest`s. Updates for Terraform v1 and nomenclature |
+| 2022-07-28 | v2.0.1     | PrometheusRule severity label updates                                                                             |
 
 ## Upgrading
 
