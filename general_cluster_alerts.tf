@@ -22,7 +22,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P2-Major"
               }
             },
           ]
@@ -43,7 +43,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P2-Major"
               }
             },
             {
@@ -55,7 +55,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "minor"
+                "severity" = "P3-Minor"
               }
             },
           ]
@@ -80,7 +80,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P3-Major"
               }
             },
             {
@@ -92,7 +92,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "10m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P4-Warning"
               }
             },
           ]
@@ -113,7 +113,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P2-Major"
               }
             },
             {
@@ -125,7 +125,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P2-Major"
               }
             },
             {
@@ -137,7 +137,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P2-Major"
               }
             },
             {
@@ -149,7 +149,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P2-Major"
               }
             },
             {
@@ -161,7 +161,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P2-Major"
               }
             },
             {
@@ -173,7 +173,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "1h"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P4-Warning"
               }
             },
             {
@@ -185,7 +185,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "5m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "debug"
+                "severity" = "P4-Warning"
               }
             },
             {
@@ -197,7 +197,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "10m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "debug"
+                "severity" = "P4-Warning"
               }
             },
             {
@@ -209,7 +209,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "5m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "minor"
+                "severity" = "P4-Warning"
               }
             },
             {
@@ -221,7 +221,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "5m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "debug"
+                "severity" = "P4-Warning"
               }
             },
             {
@@ -233,7 +233,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "5m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "debug"
+                "severity" = "P4-Warning"
               }
             },
           ]
@@ -250,7 +250,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "15m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P2-Major"
               }
             },
           ]
@@ -276,7 +276,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "labels" = {
                 "resolves" = "never"
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P3-Minor"
               }
             },
             {
@@ -289,7 +289,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "labels" = {
                 "resolves" = "never"
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P3-Minor"
               }
             },
             {
@@ -301,7 +301,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "10m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P1-Critical"
               }
             },
             {
@@ -313,7 +313,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "10m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P1-Critical"
               }
             },
             {
@@ -325,7 +325,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "15s"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "major"
+                "severity" = "P2-Major"
               }
             },
             {
@@ -337,7 +337,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "15s"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "minor"
+                "severity" = "P2-Major"
               }
             },
           ]

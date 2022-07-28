@@ -22,7 +22,7 @@ resource "kubernetes_manifest" "prometheusrule_general_namespace_alerts" {
               "for"  = "2m"
               "labels" = {
                 "scope"    = "namespace"
-                "severity" = "minor"
+                "severity" = "P3-Minor"
               }
             },
             {
@@ -34,7 +34,7 @@ resource "kubernetes_manifest" "prometheusrule_general_namespace_alerts" {
               "for"  = "1h"
               "labels" = {
                 "scope"    = "namespace"
-                "severity" = "minor"
+                "severity" = "P3-Minor"
               }
             },
           ]
@@ -51,7 +51,7 @@ resource "kubernetes_manifest" "prometheusrule_general_namespace_alerts" {
               "for"  = "15m"
               "labels" = {
                 "scope"    = "namespace"
-                "severity" = "minor"
+                "severity" = "P3-Minor"
               }
             },
           ]
@@ -68,7 +68,7 @@ resource "kubernetes_manifest" "prometheusrule_general_namespace_alerts" {
               "for"  = "15m"
               "labels" = {
                 "scope"    = "namespace"
-                "severity" = "minor"
+                "severity" = "P3-Minor"
               }
             },
             {
@@ -80,7 +80,7 @@ resource "kubernetes_manifest" "prometheusrule_general_namespace_alerts" {
               "for"  = "12h"
               "labels" = {
                 "scope"    = "namespace"
-                "severity" = "minor"
+                "severity" = "P3-Minor"
               }
             },
             {
@@ -92,7 +92,7 @@ resource "kubernetes_manifest" "prometheusrule_general_namespace_alerts" {
               "for"  = "15m"
               "labels" = {
                 "scope"    = "namespace"
-                "severity" = "minor"
+                "severity" = "P3-Minor"
               }
             },
           ]
