@@ -201,6 +201,18 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               }
             },
             {
+              "alert" = "NodeDiskMayFillIn60Hours"
+              "annotations" = {
+                "message" = "{{ $labels.kubernetes_node}} disk {{ $labels.device}} is predicted to reach DiskPressure within 60 hours"
+              }
+              "expr" = "sum by (kubernetes_node, device, mountpoint) ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 60 and ON (instance, device, mountpoint) (predict_linear(node_filesystem_avail_bytes{fstype!~\"tmpfs\",mountpoint!~\"/var/lib/kubelet\"}[7d], 60 * 3600) / node_filesystem_size_bytes * 100) < 10 and ON (instance, device, mountpoint) node_filesystem_readonly == 0)"
+              "for"  = "10m"
+              "labels" = {
+                "scope"    = "cluster"
+                "severity" = "P3-Minor"
+              }
+            },
+            {
               "alert" = "NodeLowDisk"
               "annotations" = {
                 "message" = "{{ $labels.device }} on {{ $labels.nodename }} has {{ printf \"%.2f\" $value }}% available disk space."
