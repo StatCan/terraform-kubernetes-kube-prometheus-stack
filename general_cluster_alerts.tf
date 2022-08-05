@@ -321,7 +321,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "annotations" = {
                 "message" = "Hourly failure in backup schedule {{ $labels.schedule }}!"
               }
-              "expr" = "sum by(schedule) (velero_backup_failure_total{schedule=\"velero-hourly-resources\"} - velero_backup_failure_total{schedule=\"velero-hourly-resources\"} offset 65m > 0)"
+              "expr" = "sum by(schedule) (velero_backup_failure_total{schedule=\"velero-hourly-resources\"} - velero_backup_failure_total{schedule=\"velero-hourly-resources\"} offset 160m > 1)"
               "for"  = "15s"
               "labels" = {
                 "scope"    = "cluster"
@@ -333,7 +333,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "annotations" = {
                 "message" = "Hourly partial failure in backup schedule {{ $labels.schedule }}."
               }
-              "expr" = "sum by(schedule) (velero_backup_partial_failure_total{schedule=\"velero-hourly-resources\"} - velero_backup_partial_failure_total{schedule=\"velero-hourly-resources\"} offset 65m > 0)"
+              "expr" = "sum by(schedule) (velero_backup_partial_failure_total{schedule=\"velero-hourly-resources\"} - velero_backup_partial_failure_total{schedule=\"velero-hourly-resources\"} offset 160m > 1)"
               "for"  = "15s"
               "labels" = {
                 "scope"    = "cluster"
