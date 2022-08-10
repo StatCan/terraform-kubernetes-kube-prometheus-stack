@@ -33,31 +33,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
             {
               "expr"   = "sum without (alertname, alertstate) (label_replace(ALERTS{alertstate=\"firing\",alertname!~\"ManyAlertsFiring|ManyManyAlertsFiring|KubeJobCompletion|KubeJobFailed\"}, \"alertfiring\", \"$1\", \"alertname\", \"(.*)\"))"
               "record" = "alerts_firing"
-            },
-            {
-              "alert" = "ManyManyAlertsFiring"
-              "annotations" = {
-                "message" = "{{ $value }} instances of alert {{ $labels.alertfiring }} are firing in namespace {{ $labels.namespace }}!"
-              }
-              "expr" = "sum by(alertfiring, namespace) (alerts_firing) > 50"
-              "for"  = "2m"
-              "labels" = {
-                "scope"    = "cluster"
-                "severity" = "P2-Major"
-              }
-            },
-            {
-              "alert" = "ManyAlertsFiring"
-              "annotations" = {
-                "message" = "{{ $value }} instances of alert {{ $labels.alertfiring }} are firing in namespace {{ $labels.namespace }}."
-              }
-              "expr" = "sum by(alertfiring, namespace) (alerts_firing) > 20"
-              "for"  = "2m"
-              "labels" = {
-                "scope"    = "cluster"
-                "severity" = "P3-Minor"
-              }
-            },
+            }
           ]
         },
         {

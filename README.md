@@ -84,6 +84,9 @@ EOF
 | 2021-09-07 | v1.1.1     | `CompletedJobsNotCleared` scope set to `project`                                                                  | 
 | 2022-03-16 | v2.0.0     | Convert DestinationRules and PrometheusRules to `kubernetes_manifest`s. Updates for Terraform v1 and nomenclature |
 | 2022-07-28 | v2.0.1     | PrometheusRule severity label updates                                                                             |
+| 2022-08-10 | v2.0.2     | Refactor the threshold for the VeleroHourlyBackupPartialFailure & VeleroHourlyBackupFailure alert.                |
+| 2022-08-10 | v2.0.3     | Create the NodeDiskMayFillIn60Hours alert.                                                                        |
+| 2022-08-10 | v2.0.4     | Delete the ManyAlertsFiring & ManyManyAlertsFiring alerts                                                         |
 
 ## Upgrading
 
