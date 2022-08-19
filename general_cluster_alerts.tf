@@ -305,6 +305,19 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               }
             },
             {
+              "alert" = "VeleroBackupTakingLongTime"
+              "annotations" = {
+                "message" = "A Velero backup for schedule {{ $labels.schedule }} is taking longer then 2 hours and 30 minutes."
+              }
+              "expr" = "sum by(schedule) (changes(velero_backup_attempt_total{schedule!=\"\"}[5h])) > 0 unless sum by(schedule) ((changes(velero_backup_success_total{schedule!=\"\"}[2h30m]) + changes(velero_backup_partial_failure_total{schedule!=\"\"}[2h30m]) + changes(velero_backup_failure_total{schedule!=\"\"}[2h30m]) + changes(velero_backup_validation_failure_total{schedule!=\"\"}[2h30m])) > 0)"
+              "for"  = "1m"
+              "labels" = {
+                "scope"    = "cluster"
+                "severity" = "P1-Major"
+                "resolves" = "never"
+              }
+            },
+            {
               "alert" = "VeleroHourlyBackupFailure"
               "annotations" = {
                 "message" = "Hourly failure in backup schedule {{ $labels.schedule }}!"
