@@ -313,7 +313,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               "for"  = "1m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "P1-Major"
+                "severity" = "P2-Major"
                 "resolves" = "never"
               }
             },

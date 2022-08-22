@@ -88,6 +88,7 @@ EOF
 | 2022-08-10 | v2.0.3     | Create the NodeDiskMayFillIn60Hours alert.                                                                        |
 | 2022-08-10 | v2.0.4     | Delete the ManyAlertsFiring & ManyManyAlertsFiring alerts                                                         |
 | 2022-08-19 | v2.0.5     | Create the VeleroBackupTakingLongTime alert                                                                       |
+| 2022-08-22 | v2.0.6     | Fix the VeleroBackupTakingLongTime alert severity level                                                           |
 
 
 ## Upgrading
