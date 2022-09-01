@@ -28,15 +28,6 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
           ]
         },
         {
-          "name" = "meta-alerts.rules"
-          "rules" = [
-            {
-              "expr"   = "sum without (alertname, alertstate) (label_replace(ALERTS{alertstate=\"firing\",alertname!~\"ManyAlertsFiring|ManyManyAlertsFiring|KubeJobCompletion|KubeJobFailed\"}, \"alertfiring\", \"$1\", \"alertname\", \"(.*)\"))"
-              "record" = "alerts_firing"
-            }
-          ]
-        },
-        {
           "name" = "nodepool-status.rules"
           "rules" = [
             {
@@ -50,25 +41,25 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
             {
               "alert" = "NodepoolPodsFull"
               "annotations" = {
-                "message" = "{{ if eq $labels.label_agentpool \"\"}}Unpooled node{{ else }}Nodepool {{ $labels.label_agentpool }}{{end}} pod capacity is {{ printf \"%.2f\" $value }}% full!"
+                "message" = "{{ if eq $labels.label_agentpool \"\"}}Unpooled node{{ else }}Nodepool {{ $labels.label_agentpool }}{{end}} pod count is {{ printf \"%.2f\" $value }}% of capacity!"
               }
               "expr" = "nodepool_allocated_pods/nodepool_allocatable_pods * 100 > 95"
               "for"  = "2m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "P3-Major"
+                "severity" = "P1-Critical"
               }
             },
             {
-              "alert" = "NodepoolLowPodCapacity"
+              "alert" = "NodepoolReachingPodCapacity"
               "annotations" = {
-                "message" = "{{ if eq $labels.label_agentpool \"\"}}Unpooled node{{ else }}Nodepool {{ $labels.label_agentpool }}{{end}} pod capacity is {{ printf \"%.2f\" $value }}% full."
+                "message" = "{{ if eq $labels.label_agentpool \"\"}}Unpooled node{{ else }}Nodepool {{ $labels.label_agentpool }}{{end}} pod count is {{ printf \"%.2f\" $value }}% of capacity."
               }
               "expr" = "nodepool_allocated_pods/nodepool_allocatable_pods * 100 > 85"
               "for"  = "10m"
               "labels" = {
                 "scope"    = "cluster"
-                "severity" = "P4-Warning"
+                "severity" = "P3-Minor"
               }
             },
           ]
@@ -155,7 +146,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
             {
               "alert" = "NodePodsFull"
               "annotations" = {
-                "message" = "{{ $labels.node }} pod capacity is {{ printf \"%.2f\" $value }}% full!"
+                "message" = "{{ $labels.node }} pod count is {{ printf \"%.2f\" $value }}% of capacity!"
               }
               "expr" = "sum(kube_pod_info) by (node) / sum(kube_node_status_allocatable_pods) by (node) * 100 > 99"
               "for"  = "5m"
@@ -213,9 +204,9 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
               }
             },
             {
-              "alert" = "NodeLowPodCapacity"
+              "alert" = "NodeReachingPodCapacity"
               "annotations" = {
-                "message" = "{{ $labels.node }} pod capacity is {{ printf \"%.2f\" $value }}% full."
+                "message" = "{{ $labels.node }} pod count is {{ printf \"%.2f\" $value }}% of capacity."
               }
               "expr" = "sum(kube_pod_info) by (node) / sum(kube_node_status_allocatable_pods) by (node) * 100 > 90"
               "for"  = "5m"

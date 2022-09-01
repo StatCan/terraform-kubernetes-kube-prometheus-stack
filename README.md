@@ -89,6 +89,7 @@ EOF
 | 2022-08-10 | v2.0.4     | Delete the ManyAlertsFiring & ManyManyAlertsFiring alerts                                                         |
 | 2022-08-19 | v2.0.5     | Create the VeleroBackupTakingLongTime alert                                                                       |
 | 2022-08-22 | v2.0.6     | Fix the VeleroBackupTakingLongTime alert severity level                                                           |
+| 2022-08-31 | v2.0.7     | Update nodepool pod capacity alerts and remove unused recording rule                                              |
 
 
 ## Upgrading
