@@ -4,3 +4,32 @@ include:
     file: .module.terraform.gitlab-ci.yml
 # Documentation: https://gitlab.k8s.cloud.statcan.ca/cloudnative/gitlab/gitlabci/terraform
 # Support: https://gitlab.k8s.cloud.statcan.ca/cloudnative/gitlab/gitlabci/terraform#contribution-and-support
+
+
+stages:
+  - validate
+  - test
+
+validate prometheus rules promtool:
+  stage: validate
+  image:  artifactory.cloud.statcan.ca/docker/prom/prometheus:v2.39.0
+  script:
+    - promtool check rules ./prom_rules/*_alerts.yml
+  only:
+    - main
+    - master
+    - merge_requests
+
+lint prometheus rules pint:
+  stage: validate
+  image: artifactory.cloud.statcan.ca/docker-ghcr-remote/cloudflare/pint:0.30.2
+  script:
+    - pint lint ./prom_rules/*_alerts.yml
+  only:
+    - main
+    - master
+    - merge_requests
+
+
+
+
