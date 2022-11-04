@@ -92,7 +92,7 @@ EOF
 | 2022-08-22 | v2.0.6     | Fix the VeleroBackupTakingLongTime alert severity level                                                           |
 | 2022-08-31 | v2.0.7     | Update nodepool pod capacity alerts and remove unused recording rule                                              |
 | 2022-09-02 | v2.0.8     | Update threshold for when to expect a backup for the VeleroBackupTakingLongTime alert                             |
-| 2022-11-4  | v2.0.9     | Added several alerts and associated test cases regarding cert manager certificates 
+| 2022-11-4  | v2.1.0     | Added several alerts and associated test cases regarding cert manager certificates                                |
 
 
 ## Upgrading
