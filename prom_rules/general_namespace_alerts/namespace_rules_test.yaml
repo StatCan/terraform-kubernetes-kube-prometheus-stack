@@ -1,0 +1,35 @@
+rule_files:
+    - namespace_rules.yaml
+
+evaluation_interval: 1m
+
+tests:
+    - interval: 1m
+      input_series:
+          - series: 'kube_pod_container_status_waiting_reason{namespace="enterprise-search",reason="ErrImagePull",pod="index",container="alpine"}'
+            values: '0+0x25 1+0x25 0+0x25 1+0x75 0+0x25'  #0-25=0 26-52=1 53-79=0 80-156=1 157-182=0 note: the alert has for: 1h
+
+      # Unit test ContainerWaiting.
+      alert_rule_test:
+          - eval_time: 30m
+            alertname: ContainerWaiting
+            exp_alerts: []
+          - eval_time: 60m  # 37 to 52 and value is 1.0, thus the alert is triggered at 60m, however it doesn't satisify the 1h for.
+            alertname: ContainerWaiting
+            exp_alerts: []
+          - eval_time: 150m # 135 to 150 and value is 1.0 and the expression is true for 1h so the alert is in a fired state 
+            alertname: ContainerWaiting
+            exp_alerts:
+                - exp_labels:
+                      severity: P3-Minor
+                      scope: namespace
+                      container: alpine
+                      pod: index
+                      reason: ErrImagePull
+                      namespace: enterprise-search
+                  exp_annotations: 
+                      message: Container enterprise-search/index/alpine has been in ErrImagePull for over an hour.
+          - eval_time: 157m 
+            alertname: ContainerWaiting
+            exp_alerts: []
+
