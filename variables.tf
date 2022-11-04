@@ -78,3 +78,9 @@ variable "values" {
   type        = string
   description = "Values to be passed to the Helm chart"
 }
+
+variable "cert_manager_rules_name" {
+  type        = string
+  default     = "cert-manager-alerts"
+  description = "PrometheusRule name for cert-manager alerts"
+}

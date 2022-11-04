@@ -1,0 +1,211 @@
+# Tests for the cert-manager alerts
+
+rule_files:
+  - cert_manager_rules.yaml
+
+tests:
+
+# TC 1
+
+  - interval: 1m
+    input_series:
+      - series: certmanager_certificate_ready_status{condition="True", name="gateway-renamer-mutating-webhook"}
+        values: 0+0x10              
+      - series: certmanager_certificate_renewal_timestamp_seconds{name="gateway-renamer-mutating-webhook",namespace="ingress-general-system"}
+        values: 0+0x10 # Jan. 1st 1970
+      - series: certmanager_certificate_expiration_timestamp_seconds{name="gateway-renamer-mutating-webhook", namespace="ingress-general-system"}
+        values: 4000000000+0x10 # October 2 2096
+
+    alert_rule_test:  
+      - eval_time: 11m
+        alertname: certManagerCertFailingToRenew
+        exp_alerts: 
+          - exp_labels:
+              name: gateway-renamer-mutating-webhook
+              severity: P1-Critical
+              scope: cluster  
+            exp_annotations:
+              message: 'The cert-manager certificate named gateway-renamer-mutating-webhook is failing to renew'
+# TC 2
+
+  - interval: 1m 
+    input_series:
+      - series: certmanager_certificate_ready_status{condition="True", name="gateway-renamer-mutating-webhook"}
+        values: 0+0x10              
+      - series: certmanager_certificate_renewal_timestamp_seconds{name="gateway-renamer-mutating-webhook",namespace="ingress-general-system"}
+        values: 0+0x10 # Jan. 1st 1970
+      - series: certmanager_certificate_expiration_timestamp_seconds{name="gateway-renamer-mutating-webhook", namespace="ingress-general-system"}
+        values: 0+0x10 # Jan. 1st 1970
+
+    alert_rule_test:  
+      - eval_time: 11m
+        alertname: certManagerCertFailingToRenew
+        exp_alerts: []
+# TC 3
+
+  - interval: 1m
+    input_series:
+      - series: certmanager_certificate_ready_status{condition="True", name="gateway-renamer-mutating-webhook"}
+        values: 0+0x10              
+      - series: certmanager_certificate_renewal_timestamp_seconds{name="gateway-renamer-mutating-webhook",namespace="ingress-general-system"}
+        values: 4000000000+0x10 # October 2 2096
+      - series: certmanager_certificate_expiration_timestamp_seconds{name="gateway-renamer-mutating-webhook", namespace="ingress-general-system"}
+        values: 4000000000+0x10 # October 2 2096
+
+    alert_rule_test:  
+      - eval_time: 11m
+        alertname: certManagerCertFailingToRenew
+        exp_alerts: []
+
+# TC 4
+
+  - interval: 1m
+    input_series:
+      - series: certmanager_certificate_ready_status{condition="True", name="gateway-renamer-mutating-webhook"}
+        values: 1+0x10              
+      - series: certmanager_certificate_renewal_timestamp_seconds{name="gateway-renamer-mutating-webhook",namespace="ingress-general-system"}
+        values: 0+0x10 # Jan. 1st 1970
+      - series: certmanager_certificate_expiration_timestamp_seconds{name="gateway-renamer-mutating-webhook", namespace="ingress-general-system"}
+        values: 4000000000+0x10 # October 2 2096
+
+    alert_rule_test:  
+      - eval_time: 11m
+        alertname: certManagerCertFailingToRenew
+        exp_alerts: []
+
+# TC 5
+
+  - interval: 1m
+    input_series:
+      - series: certmanager_certificate_ready_status{condition="True", name="gateway-renamer-mutating-webhook"}
+        values: 0+0x10              
+      - series: certmanager_certificate_renewal_timestamp_seconds{name="gateway-renamer-mutating-webhook",namespace="ingress-general-system"}
+        values: 4000000000+0x10 # October 2 2096
+
+    alert_rule_test:  
+      - eval_time: 11m
+        alertname: certManagerCertFailure
+        exp_alerts: 
+          - exp_labels:
+              name: gateway-renamer-mutating-webhook
+              severity: P2-Major
+              scope: cluster  
+            exp_annotations:
+              message: 'The cert-manager certificate named gateway-renamer-mutating-webhook has a ready status that is not true and the current date has not passed the renewal date of the certificate'
+
+# TC 6
+
+  - interval: 1m
+    input_series:
+      - series: certmanager_certificate_ready_status{condition="True", name="gateway-renamer-mutating-webhook"}
+        values: 0+0x10              
+      - series: certmanager_certificate_renewal_timestamp_seconds{name="gateway-renamer-mutating-webhook",namespace="ingress-general-system"}
+        values: 0+0x10 # Jan. 1st 1970
+
+    alert_rule_test:  
+      - eval_time: 11m
+        alertname: certManagerCertFailure
+        exp_alerts: []
+
+# TC 7
+
+  - interval: 1m
+    input_series:
+      - series: certmanager_certificate_ready_status{condition="True", name="gateway-renamer-mutating-webhook"}
+        values: 1+0x10              
+      - series: certmanager_certificate_renewal_timestamp_seconds{name="gateway-renamer-mutating-webhook",namespace="ingress-general-system"}
+        values: 4000000000+0x10 # October 2 2096
+
+    alert_rule_test:  
+      - eval_time: 11m
+        alertname: certManagerCertFailure
+        exp_alerts: []
+
+# TC 8
+
+  - interval: 1m
+    input_series:        
+      - series: certmanager_certificate_expiration_timestamp_seconds{name="gateway-renamer-mutating-webhook"}
+        values: 0+0x2 # Jan 1st 1970
+
+    alert_rule_test:  
+      - eval_time: 3m
+        alertname: certManagerCertExpired
+        exp_alerts: 
+          - exp_labels:
+              name: gateway-renamer-mutating-webhook
+              severity: P1-Critical
+              scope: cluster  
+            exp_annotations:
+              message: 'The cert-manager certificate named gateway-renamer-mutating-webhook has expired.'
+
+# TC 9
+
+  - interval: 1m
+    input_series:        
+      - series: certmanager_certificate_expiration_timestamp_seconds{name="gateway-renamer-mutating-webhook"}
+        values: 4000000000+0x2 # October 2 2096
+
+    alert_rule_test:  
+      - eval_time: 3m
+        alertname: certManagerCertExpired
+        exp_alerts: []
+
+# TC 10
+
+  - interval: 1m
+    input_series: # empty    
+
+    alert_rule_test:  
+      - eval_time: 10m
+        alertname: certManagerAbsent
+        exp_alerts: 
+          - exp_labels:
+              severity: P1-Critical
+              scope: cluster  
+              job: cert-manager
+            exp_annotations:
+              message: 'cert-manager has disappeared from Prometheus service discovery. New certificates will not be able to be minted, and existing ones cannot be renewed until cert-manager is back.'
+
+# TC 11
+
+  - interval: 1m
+    input_series:    
+      - series: up{container="cert-manager", endpoint="2143", instance="11.112.1.120:2113", job="cert-manager", namespace="cert-manager", pod="cert-manager-53fsbdfd-jkxr5v", service="cert-manager"}
+        values: 1+0x3
+
+    alert_rule_test:  
+      - eval_time: 10m
+        alertname: certManagerAbsent
+        exp_alerts: []
+
+# TC 12
+
+  - interval: 1m
+    input_series:
+      - series: certmanager_http_acme_client_request_count{status="429", host="rate-limited.acme-v02.api.letsencrypt.org", path="/acme/new-order"}
+        values:  1  1  1  1  1  2  2  3  4  5   6    536  1009  # rate = 0.01333
+ #               0m 1m 2m 3m 4m 5m 6m 7m 8m 9m  10m  11m 12m 13m
+
+    alert_rule_test:  
+      - eval_time: 10m
+        alertname: certManagerHittingRateLimits
+        exp_alerts: 
+          - exp_labels:
+              severity: P1-Critical
+              scope: cluster  
+              host: rate-limited.acme-v02.api.letsencrypt.org
+            exp_annotations:
+              message: 'Cert manager hitting LetsEncrypt rate limits. Depending on the rate limit, cert-manager may be unable to generate certificates for up to a week. The rate is: 0.013333333333333334'
+
+# TC 13
+
+  - interval: 1m
+    input_series:        
+      - series: certmanager_http_acme_client_request_count{status="429", host="rate-limited.acme-v02.api.letsencrypt.org", path="/acme/new-order"}
+        values: 1  1  1  1  1  1  1  1  1  1  1   1   1   1
+ #              0m 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 11m 12m 13m
+    alert_rule_test:  
+      - eval_time: 10m
+        alertname: certManagerHittingRateLimits
+        exp_alerts: []

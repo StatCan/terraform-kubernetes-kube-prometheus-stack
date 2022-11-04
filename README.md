@@ -74,6 +74,7 @@ EOF
 | namespace_rules_name     | string | no       | PrometheusRule name. Default `general-namespace-alerts`        |
 | prometheus_pvc_name      | string | no       | Used for storage alert. Set if using non-default helm_release  |
 | values                   | list   | no       | Values to be passed to the Helm Chart                          |
+| cert_manager_rules_name  | string | no       | PrometheusRule name. Default `cert-manager-alerts`             |
 
 ## History
 
@@ -91,6 +92,7 @@ EOF
 | 2022-08-22 | v2.0.6     | Fix the VeleroBackupTakingLongTime alert severity level                                                           |
 | 2022-08-31 | v2.0.7     | Update nodepool pod capacity alerts and remove unused recording rule                                              |
 | 2022-09-02 | v2.0.8     | Update threshold for when to expect a backup for the VeleroBackupTakingLongTime alert                             |
+| 2022-11-4  | v2.0.9     | Added several alerts and associated test cases regarding cert manager certificates 
 
 
 ## Upgrading

@@ -1,0 +1,52 @@
+
+  groups:
+  - name: certmanager.rules
+    rules:
+  
+    - alert: certManagerCertFailingToRenew
+      expr: sum by (name) (certmanager_certificate_ready_status{condition="True"}==0) AND (sum by (name) (time() > certmanager_certificate_renewal_timestamp_seconds) ) AND (sum by (name) (time() < certmanager_certificate_expiration_timestamp_seconds))
+      for: 10m
+      labels:
+        severity: P1-Critical
+        scope: cluster
+      annotations:
+        message: 'The cert-manager certificate named {{ $labels.name }} is failing to renew'
+
+    - alert: certManagerCertFailure
+      expr: sum by (name) (certmanager_certificate_ready_status{condition="True"}==0) AND (sum by (name) (time() < certmanager_certificate_renewal_timestamp_seconds))
+      for: 10m
+      labels:
+        severity: P2-Major
+        scope: cluster
+      annotations:
+        message: 'The cert-manager certificate named {{ $labels.name }} has a ready status that is not true and the current date has not passed the renewal date of the certificate'
+
+    - alert: certManagerCertExpired
+      expr: sum by (name) (time() > certmanager_certificate_expiration_timestamp_seconds)
+      for: 2m
+      labels:
+        severity: P1-Critical
+        scope: cluster
+      annotations:
+        message: 'The cert-manager certificate named {{ $labels.name }} has expired.'
+
+    # Found this online https://gitlab.com/uneeq-oss/cert-manager-mixin
+    - alert: certManagerAbsent
+      expr: absent(up{job="cert-manager"})
+      for: 2m
+      labels:
+        severity: P1-Critical
+        scope: cluster
+      annotations:
+        message: 'cert-manager has disappeared from Prometheus service discovery. New certificates will not be able to be minted, and existing ones cannot be renewed until cert-manager is back.'
+
+    # Found this online https://gitlab.com/uneeq-oss/cert-manager-mixin
+    - alert: certManagerHittingRateLimits
+      expr: sum by (host) (rate(certmanager_http_acme_client_request_count{status="429"}[5m])) > 0
+      for: 5m
+      labels:
+        severity: P1-Critical
+        scope: cluster
+      annotations: 
+        message: 'Cert manager hitting LetsEncrypt rate limits. Depending on the rate limit, cert-manager may be unable to generate certificates for up to a week. The rate is: {{ $value }}'
+
