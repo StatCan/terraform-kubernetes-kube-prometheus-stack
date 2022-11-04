@@ -10,7 +10,7 @@ resource "kubernetes_manifest" "prometheusrule_general_cluster_alerts" {
       "name"      = var.cluster_rules_name
       "namespace" = var.helm_namespace
     }
-    "spec" = yamldecode(templatefile("${path.module}/prom_rules/general_cluster_alerts.yaml", {
+    "spec" = yamldecode(templatefile("${path.module}/prom_rules/general_cluster_alerts/cluster_rules.yaml", {
       prometheus_pvc_name = var.prometheus_pvc_name
     }))
   }

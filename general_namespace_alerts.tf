@@ -8,6 +8,6 @@ resource "kubernetes_manifest" "prometheusrule_general_namespace_alerts" {
       "name"      = var.namespace_rules_name
       "namespace" = var.helm_namespace
     }
-    "spec" = yamldecode(file("${path.module}/prom_rules/general_namespace_alerts.yml"))
+    "spec" = yamldecode(file("${path.module}/prom_rules/general_namespace_alerts/namespace_rules.yaml"))
   }
 }

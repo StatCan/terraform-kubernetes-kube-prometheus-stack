@@ -58,3 +58,4 @@ groups:
         labels:
           scope: namespace
           severity: P3-Minor
+
