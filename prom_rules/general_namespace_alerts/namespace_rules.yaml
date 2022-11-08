@@ -12,9 +12,9 @@ groups:
 
       - alert: ContainerWaiting
         annotations:
-          message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container }} has been in {{ $labels.reason }} for over an hour.'
+          message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container }} has been in {{ $labels.reason }} for longer than 15 minutes.'
         expr: 'sum by (container, pod, namespace, reason) (avg_over_time(kube_pod_container_status_waiting_reason{reason!="CrashLoopBackOff"}[15m:])) > 0.8'
-        for: 1h
+        for: 15m
         labels:
           scope: namespace
           severity: P3-Minor
