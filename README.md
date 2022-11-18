@@ -51,7 +51,7 @@ EOF
 ### Notes
 
  To upgrade an existing Helm release created from the [previous module](#previous-module) instead of reinstalling into a new Helm release, set `helm_release` to `"prometheus-operator"`. This will persist Helm release history and some temporary data, but may result in resource name and label aberrations. 
- 
+
  It is alternatively possible to reinstall into a new release while persisting existing data in Persistent Volumes from the previous module. This process involves downtime and does not guarantee data compatibility. A guide is available [here](#https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack#redeploy-with-new-name-downtime). Note that there are further steps if multiple components (e.g. both Prometheus and Grafana) were configured with Persistent Volume storage. Their Persistent Volumes will need to be given different labels, and the components' `volumeClaimTemplate`s (defined in Helm values) will need to be given corresponding [selectors](https://docs.openshift.com/container-platform/3.3/install_config/persistent_storage/selector_label_binding.html#selector-label-volume-define).
 
 ## Variables Values
@@ -78,22 +78,23 @@ EOF
 
 ## History
 
-| Date       | Release    | Change                                                                                                            |
-| ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------- |
-| 2021-03-26 | v1.0.0     | 1st release                                                                                                       |
-| 2021-07-05 | v1.1.0     | 1st set of general project alerts                                                                                 |
-| 2021-09-07 | v1.1.1     | `CompletedJobsNotCleared` scope set to `project`                                                                  | 
-| 2022-03-16 | v2.0.0     | Convert DestinationRules and PrometheusRules to `kubernetes_manifest`s. Updates for Terraform v1 and nomenclature |
-| 2022-07-28 | v2.0.1     | PrometheusRule severity label updates                                                                             |
-| 2022-08-10 | v2.0.2     | Refactor the threshold for the VeleroHourlyBackupPartialFailure & VeleroHourlyBackupFailure alert                 |
-| 2022-08-10 | v2.0.3     | Create the NodeDiskMayFillIn60Hours alert                                                                         |
-| 2022-08-10 | v2.0.4     | Delete the ManyAlertsFiring & ManyManyAlertsFiring alerts                                                         |
-| 2022-08-19 | v2.0.5     | Create the VeleroBackupTakingLongTime alert                                                                       |
-| 2022-08-22 | v2.0.6     | Fix the VeleroBackupTakingLongTime alert severity level                                                           |
-| 2022-08-31 | v2.0.7     | Update nodepool pod capacity alerts and remove unused recording rule                                              |
-| 2022-09-02 | v2.0.8     | Update threshold for when to expect a backup for the VeleroBackupTakingLongTime alert                             |
-| 2022-11-04 | v2.1.0     | Add several alerts and associated test cases regarding cert manager certificates                                  |
-| 2022-11-08 | v2.1.1     | Adjust ContainerWaiting alert duration to align with PodNotReady                                                  |
+| Date       | Release | Change                                                       |
+| ---------- | ------- | ------------------------------------------------------------ |
+| 2021-03-26 | v1.0.0  | 1st release                                                  |
+| 2021-07-05 | v1.1.0  | 1st set of general project alerts                            |
+| 2021-09-07 | v1.1.1  | `CompletedJobsNotCleared` scope set to `project`             |
+| 2022-03-16 | v2.0.0  | Convert DestinationRules and PrometheusRules to `kubernetes_manifest`s. Updates for Terraform v1 and nomenclature |
+| 2022-07-28 | v2.0.1  | PrometheusRule severity label updates                        |
+| 2022-08-10 | v2.0.2  | Refactor the threshold for the VeleroHourlyBackupPartialFailure & VeleroHourlyBackupFailure alert |
+| 2022-08-10 | v2.0.3  | Create the NodeDiskMayFillIn60Hours alert                    |
+| 2022-08-10 | v2.0.4  | Delete the ManyAlertsFiring & ManyManyAlertsFiring alerts    |
+| 2022-08-19 | v2.0.5  | Create the VeleroBackupTakingLongTime alert                  |
+| 2022-08-22 | v2.0.6  | Fix the VeleroBackupTakingLongTime alert severity level      |
+| 2022-08-31 | v2.0.7  | Update nodepool pod capacity alerts and remove unused recording rule |
+| 2022-09-02 | v2.0.8  | Update threshold for when to expect a backup for the VeleroBackupTakingLongTime alert |
+| 2022-11-04 | v2.1.0  | Add several alerts and associated test cases regarding cert manager certificates |
+| 2022-11-08 | v2.1.1  | Adjust ContainerWaiting alert duration to align with PodNotReady |
+| 2022-11-16 | v2.1.2  | Fix node and nodepool pod capacity, NodePodsFull, and NodeReachingPodCapacity alerts |
 
 ## Upgrading
 
