@@ -84,6 +84,15 @@ groups:
           scope: cluster
           severity: P2-Major
 
+      - alert: NodeReadinessFlapping
+        annotations:
+          message: The readiness status of node {{ $labels.node }} has changed {{ $value }} times in the last 15 minutes.
+        expr: sum by(cluster, node) (changes(kube_node_status_condition{condition="Ready",status="true"}[15m])) > 2
+        for: 15m
+        labels:
+          scope: cluster
+          severity: P2-Major
+
       - alert: NodeUnschedulable
         annotations:
           message: '{{ $labels.node }} is unschedulable for over 1 hour. If it is healthy, is it cordoned?'

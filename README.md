@@ -95,7 +95,8 @@ EOF
 | 2022-11-04 | v2.1.0  | Add several alerts and associated test cases regarding cert manager certificates                                     |
 | 2022-11-08 | v2.1.1  | Adjust ContainerWaiting alert duration to align with PodNotReady                                                     |
 | 2022-11-16 | v2.1.2  | Fix node and nodepool pod capacity, NodePodsFull, and NodeReachingPodCapacity alerts                                 |
-| 2022-11-24 | v2.2.2  | Add alert: PrometheusDiskMayFillIn60Hours                                                                            |
+| 2022-11-24 | v2.2.0  | Add alert: PrometheusDiskMayFillIn60Hours                                                                            |
+| 2022-12-06 | v2.3.0  | Add alert: NodeReadinessFlapping                                                                                     |
 
 ## Upgrading
 
