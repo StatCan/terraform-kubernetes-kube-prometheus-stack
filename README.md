@@ -97,6 +97,7 @@ EOF
 | 2022-11-16 | v2.1.2  | Fix node and nodepool pod capacity, NodePodsFull, and NodeReachingPodCapacity alerts                                 |
 | 2022-11-24 | v2.2.0  | Add alert: PrometheusDiskMayFillIn60Hours                                                                            |
 | 2022-12-06 | v2.3.0  | Add alert: NodeReadinessFlapping                                                                                     |
+| 2022-12-15 | v2.3.1  | Fix the NodeUnschedulable alert severity level                                                                       |
 
 ## Upgrading
 

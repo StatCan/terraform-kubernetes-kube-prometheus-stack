@@ -100,7 +100,7 @@ groups:
         for: 1h
         labels:
           scope: cluster
-          severity: P4-Warning
+          severity: P2-Major
 
       - alert: NodePodsFull
         annotations:
