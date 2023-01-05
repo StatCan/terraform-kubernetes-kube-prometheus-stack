@@ -56,48 +56,44 @@ EOF
 
 ## Variables Values
 
-| Name                     | Type   | Required | Value                                                          |
-| ------------------------ | ------ | -------- | -------------------------------------------------------------- |
-| chart_version            | string | yes      | Version of the Helm chart                                      |
-| helm_namespace           | string | yes      | The namespace Helm will install the chart under                |
-| helm_release             | string | no       | The name of the Helm release. Default `kube-prometheus-stack`  |
-| helm_repository          | string | no       | The repository where the Helm chart is stored                  |
-| helm_repository_username | string | no       | The username of the repository where the Helm chart is stored  |
-| helm_repository_password | string | no       | The password of the repository where the Helm chart is stored  |
-| enable_destinationrules  | bool   | no       | For Prometheus, Alertmanager, Grafana, and Node Exporters      |
-| destinationrules_mode    | string | no       | DestinationRule TLS mode. Default `DISABLE`                    |
-| destinationrules_labels  | map    | no       | Labels for DestinationRules                                    |
-| cluster_domain           | string | no       | Cluster domain for DestinationRules. Default `cluster.local`   |
-| enable_prometheusrules   | bool   | no       | Adds PrometheusRules for general cluster and namespace alerts  |
-| prometheusrules_labels   | map    | no       | Labels for general cluster and namespace alert PrometheusRules |
-| cluster_rules_name       | string | no       | PrometheusRule name. Default `general-cluster-alerts`          |
-| namespace_rules_name     | string | no       | PrometheusRule name. Default `general-namespace-alerts`        |
-| prometheus_pvc_name      | string | no       | Used for storage alert. Set if using non-default helm_release  |
-| values                   | list   | no       | Values to be passed to the Helm Chart                          |
-| cert_manager_rules_name  | string | no       | PrometheusRule name. Default `cert-manager-alerts`             |
+| Name                        | Type   | Required | Value                                                          |
+| ----------------------------| ------ | -------- | -------------------------------------------------------------- |
+| chart_version               | string | yes      | Version of the Helm chart                                      |
+| helm_namespace              | string | yes      | The namespace Helm will install the chart under                |
+| helm_release                | string | no       | The name of the Helm release. Default `kube-prometheus-stack`  |
+| helm_repository             | string | no       | The repository where the Helm chart is stored                  |
+| helm_repository_username    | string | no       | The username of the repository where the Helm chart is stored  |
+| helm_repository_password    | string | no       | The password of the repository where the Helm chart is stored  |
+| enable_destinationrules     | bool   | no       | For Prometheus, Alertmanager, Grafana, and Node Exporters      |
+| destinationrules_mode       | string | no       | DestinationRule TLS mode. Default `DISABLE`                    |
+| destinationrules_labels     | map    | no       | Labels for DestinationRules                                    |
+| cluster_domain              | string | no       | Cluster domain for DestinationRules. Default `cluster.local`   |
+| enable_prometheusrules      | bool   | no       | Adds PrometheusRules for alerts. Default `true`                |
+| values                      | list   | no       | Values to be passed to the Helm Chart                          |
 
 ## History
 
-| Date       | Release | Change                                                                                                               |
-| ---------- | ------- | ------------------------------------------------------------                                                         |
-| 2021-03-26 | v1.0.0  | 1st release                                                                                                          |
-| 2021-07-05 | v1.1.0  | 1st set of general project alerts                                                                                    |
-| 2021-09-07 | v1.1.1  | `CompletedJobsNotCleared` scope set to `project`                                                                     |
-| 2022-03-16 | v2.0.0  | Convert DestinationRules and PrometheusRules to `kubernetes_manifest`s. Updates for Terraform v1 and nomenclature    |
-| 2022-07-28 | v2.0.1  | PrometheusRule severity label updates                                                                                |
-| 2022-08-10 | v2.0.2  | Refactor the threshold for the VeleroHourlyBackupPartialFailure & VeleroHourlyBackupFailure alert                    |
-| 2022-08-10 | v2.0.3  | Create the NodeDiskMayFillIn60Hours alert                                                                            |
-| 2022-08-10 | v2.0.4  | Delete the ManyAlertsFiring & ManyManyAlertsFiring alerts                                                            |
-| 2022-08-19 | v2.0.5  | Create the VeleroBackupTakingLongTime alert                                                                          |
-| 2022-08-22 | v2.0.6  | Fix the VeleroBackupTakingLongTime alert severity level                                                              |
-| 2022-08-31 | v2.0.7  | Update nodepool pod capacity alerts and remove unused recording rule                                                 |
-| 2022-09-02 | v2.0.8  | Update threshold for when to expect a backup for the VeleroBackupTakingLongTime alert                                |
-| 2022-11-04 | v2.1.0  | Add several alerts and associated test cases regarding cert manager certificates                                     |
-| 2022-11-08 | v2.1.1  | Adjust ContainerWaiting alert duration to align with PodNotReady                                                     |
-| 2022-11-16 | v2.1.2  | Fix node and nodepool pod capacity, NodePodsFull, and NodeReachingPodCapacity alerts                                 |
-| 2022-11-24 | v2.2.0  | Add alert: PrometheusDiskMayFillIn60Hours                                                                            |
-| 2022-12-06 | v2.3.0  | Add alert: NodeReadinessFlapping                                                                                     |
-| 2022-12-15 | v2.3.1  | Fix the NodeUnschedulable alert severity level                                                                       |
+| Date       | Release | Change                                                                                                                                                                                          |
+| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 2021-03-26 | v1.0.0  | 1st release                                                                                                                                                                                     |
+| 2021-07-05 | v1.1.0  | 1st set of general project alerts                                                                                                                                                               |
+| 2021-09-07 | v1.1.1  | `CompletedJobsNotCleared` scope set to `project`                                                                                                                                                |
+| 2022-03-16 | v2.0.0  | Convert DestinationRules and PrometheusRules to `kubernetes_manifest`s. Updates for Terraform v1 and nomenclature                                                                               |
+| 2022-07-28 | v2.0.1  | PrometheusRule severity label updates                                                                                                                                                           |
+| 2022-08-10 | v2.0.2  | Refactor the threshold for the VeleroHourlyBackupPartialFailure & VeleroHourlyBackupFailure alert                                                                                               |
+| 2022-08-10 | v2.0.3  | Create the NodeDiskMayFillIn60Hours alert                                                                                                                                                       |
+| 2022-08-10 | v2.0.4  | Delete the ManyAlertsFiring & ManyManyAlertsFiring alerts                                                                                                                                       |
+| 2022-08-19 | v2.0.5  | Create the VeleroBackupTakingLongTime alert                                                                                                                                                     |
+| 2022-08-22 | v2.0.6  | Fix the VeleroBackupTakingLongTime alert severity level                                                                                                                                         |
+| 2022-08-31 | v2.0.7  | Update nodepool pod capacity alerts and remove unused recording rule                                                                                                                            |
+| 2022-09-02 | v2.0.8  | Update threshold for when to expect a backup for the VeleroBackupTakingLongTime alert                                                                                                           |
+| 2022-11-04 | v2.1.0  | Add several alerts and associated test cases regarding cert manager certificates                                                                                                                |
+| 2022-11-08 | v2.1.1  | Adjust ContainerWaiting alert duration to align with PodNotReady                                                                                                                                |
+| 2022-11-16 | v2.1.2  | Fix node and nodepool pod capacity, NodePodsFull, and NodeReachingPodCapacity alerts                                                                                                            |
+| 2022-11-24 | v2.2.0  | Add alert: PrometheusDiskMayFillIn60Hours                                                                                                                                                       |
+| 2022-12-06 | v2.3.0  | Add alert: NodeReadinessFlapping                                                                                                                                                                |
+| 2022-12-15 | v2.3.1  | Fix the NodeUnschedulable alert severity level                                                                                                                                                  |
+| 2023-01-04 | v3.0.0  | Refactor general cluster and namespace alerts. enable_prometheusrules false->true. Removes variables: prometheusrules_labels, cluster_rules_name, namespace_rules_name, cert_manager_rules_name |
 
 ## Upgrading
 
@@ -110,6 +106,8 @@ EOF
 
     - The default names for these PrometheusRule resources are now `general-cluster-alerts` and `general-namespace-alerts`. The scopes have changed from `platform` to `cluster` and from `project` to `namespace`. Adjust Alertmanager routing criteria accordingly.
     - The severities for these rules have been adjusted from `minor/major/urgent` to `debug/minor/major`. Adjust Alertmanager routing criteria accordingly.
+
+
 
 ## Previous Module
 

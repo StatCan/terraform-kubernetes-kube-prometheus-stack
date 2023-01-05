@@ -1,0 +1,11 @@
+groups:
+  - name: certificates.rules
+    rules:
+      - alert: SSLCertExpiringSoon
+        annotations:
+          message: 'SSL certificate for {{ $labels.instance }} expires in less than 20 days.'
+        expr: 'sum by (target, instance) (probe_ssl_earliest_cert_expiry{job="blackbox-exporter-prometheus-blackbox-exporter"} - time()) < 86400 * 20'
+        for: 2m
+        labels:
+          scope: cluster
+          severity: P2-Major

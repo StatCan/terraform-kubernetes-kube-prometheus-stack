@@ -1,0 +1,23 @@
+# ${prometheus_pvc_name} is not valid YAML, this value comes from alerts.tf. Ignoring this so the pint part of the pipeline doesn't fail due to invalid syntax. 
+# pint ignore/begin
+groups:
+  - name: prometheus-extended.rules
+    rules:
+      - alert: PrometheusStorageLow
+        annotations:
+          message: 'Prometheus storage has {{ printf "%.2f" $value }}% capacity remaining.'
+        expr: 'sum by (persistentvolumeclaim, namespace, node)  (kubelet_volume_stats_available_bytes{persistentvolumeclaim="${prometheus_pvc_name}"} / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${prometheus_pvc_name}"}) * 100 < 15'
+        for: 15m
+        labels:
+          scope: cluster
+          severity: P2-Major
+
+      - alert: PrometheusDiskMayFillIn60Hours
+        annotations:
+          message: 'Prometheus storage is predicted to have {{ printf "%.2f" $value }}% capacity remaining 60 hours from now and will run out of space soon.'
+        expr: 'sum by (persistentvolumeclaim, namespace, node) ((predict_linear(kubelet_volume_stats_available_bytes{persistentvolumeclaim="${prometheus_pvc_name}"}[7d], 60 * 3600)) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${prometheus_pvc_name}"} * 100 < 10)'
+        for: 30m
+        labels:
+            scope: cluster
+            severity: P1-Critical
+# pint ignore/end

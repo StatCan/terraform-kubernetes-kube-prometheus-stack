@@ -43,34 +43,10 @@ variable "cluster_domain" {
   description = "Cluster domain for DestinationRules"
 }
 
-
 variable "enable_prometheusrules" {
   type        = bool
-  default     = false
-  description = "Adds PrometheusRules for general cluster and namespace alerts"
-}
-variable "prometheusrules_labels" {
-  type = map(string)
-  default = {
-    app     = "kube-prometheus-stack"
-    release = "kube-prometheus-stack"
-  }
-  description = "The labels of PrometheusRules for general cluster and namespace alerts"
-}
-variable "cluster_rules_name" {
-  type        = string
-  default     = "general-cluster-alerts"
-  description = "PrometheusRule name for general cluster alerts"
-}
-variable "namespace_rules_name" {
-  type        = string
-  default     = "general-namespace-alerts"
-  description = "PrometheusRule name for general namespace alerts"
-}
-variable "prometheus_pvc_name" {
-  type        = string
-  default     = "prometheus-kube-prometheus-stack-prometheus-db-prometheus-kube-prometheus-stack-prometheus-0"
-  description = "Used for storage alert. Set if using non-default helm_release"
+  default     = true
+  description = "Adds PrometheusRules for alerts"
 }
 
 variable "values" {
@@ -79,8 +55,8 @@ variable "values" {
   description = "Values to be passed to the Helm chart"
 }
 
-variable "cert_manager_rules_name" {
+variable "prometheus_pvc_name" {
   type        = string
-  default     = "cert-manager-alerts"
-  description = "PrometheusRule name for cert-manager alerts"
+  default     = "prometheus-kube-prometheus-stack-prometheus-db-prometheus-kube-prometheus-stack-prometheus-0"
+  description = "Used for storage alert. Set if using non-default helm_release"
 }
