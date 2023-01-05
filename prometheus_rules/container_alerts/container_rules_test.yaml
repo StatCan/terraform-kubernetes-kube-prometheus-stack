@@ -1,5 +1,7 @@
+# Tests for container alerts
+
 rule_files:
-    - namespace_rules.yaml
+  - container_rules.yaml
 
 evaluation_interval: 1m
 
@@ -17,7 +19,7 @@ tests:
           - eval_time: 60m  # 37 to 52 and value is 1.0, thus the alert is triggered at 60m, however it doesn't satisify the 1h for.
             alertname: ContainerWaiting
             exp_alerts: []
-          - eval_time: 150m # 135 to 150 and value is 1.0 and the expression is true for 1h so the alert is in a fired state 
+          - eval_time: 150m # 135 to 150 and value is 1.0 and the expression is true for 1h so the alert is in a fired state
             alertname: ContainerWaiting
             exp_alerts:
                 - exp_labels:
@@ -27,9 +29,8 @@ tests:
                       pod: index
                       reason: ErrImagePull
                       namespace: enterprise-search
-                  exp_annotations: 
+                  exp_annotations:
                       message: Container enterprise-search/index/alpine has been in ErrImagePull for longer than 15 minutes.
-          - eval_time: 157m 
+          - eval_time: 157m
             alertname: ContainerWaiting
             exp_alerts: []
-

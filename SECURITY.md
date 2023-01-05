@@ -1,12 +1,11 @@
 ([Français](#sécurité))
 
-# Reporting Security Issues
+# Security
 
-To report a security issue, email [william.hearn@canada.ca](mailto:william.hearn@canada.ca) or [zachary.seguin@canada.ca](mailto:zachary.seguin@canada.ca) and include the word "SECURITY" in the subject line.
+**Do not post any security issues on the public repository!** Security vulnerabilities must be reported by email to `statcan.opensource-logiciellibre.statcan@canada.ca`
 
-The TBS team will send a response indicating the next steps in handling your report. After the initial reply to your report, the security team will keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
 ______________________
 
 ## Sécurité
 
-TBD
+**Ne publiez aucun problème de sécurité sur le dépôt publique!** Les vulnérabilités de sécurité doivent être signalées par courriel à `statcan.opensource-logiciellibre.statcan@canada.ca`

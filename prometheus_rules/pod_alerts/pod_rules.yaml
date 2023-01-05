@@ -1,0 +1,11 @@
+groups:
+  - name: pods.rules
+    rules:
+      - alert: PodNotReady
+        annotations:
+          message: 'Pod {{ $labels.namespace }}/{{ $labels.pod }} has been in a non-ready state for longer than 15 minutes.'
+        expr: 'sum by(namespace, pod) (max by(namespace, pod) (kube_pod_status_phase{job="kube-state-metrics",namespace=~".*",phase=~"Pending|Unknown"}) * on(namespace, pod) group_left(owner_kind) topk by(namespace, pod) (1, max by(namespace, pod, owner_kind) (kube_pod_owner{owner_kind!="Job"}))) > 0'
+        for: 15m
+        labels:
+          scope: namespace
+          severity: P3-Minor

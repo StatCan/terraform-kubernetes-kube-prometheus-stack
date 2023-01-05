@@ -1,0 +1,20 @@
+groups:
+  - name: containers.rules
+    rules:
+      - alert: ManyContainerRestarts
+        annotations:
+          message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container }} restarted {{ $value }} times in the last 8 hours.'
+        expr: 'sum by(container, pod, namespace) (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 8h > 10)'
+        for: 2m
+        labels:
+          scope: namespace
+          severity: P3-Minor
+
+      - alert: ContainerWaiting
+        annotations:
+          message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container }} has been in {{ $labels.reason }} for longer than 15 minutes.'
+        expr: 'sum by (container, pod, namespace, reason) (avg_over_time(kube_pod_container_status_waiting_reason{reason!="CrashLoopBackOff"}[15m:])) > 0.8'
+        for: 15m
+        labels:
+          scope: namespace
+          severity: P3-Minor
