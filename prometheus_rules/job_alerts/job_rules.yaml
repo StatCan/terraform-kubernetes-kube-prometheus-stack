@@ -4,6 +4,7 @@ groups:
       - alert: JobFailed
         annotations:
           message: 'Job {{ $labels.namespace }}/{{ $labels.job_name }} failed to complete. Removing the failed job after investigation should clear this alert.'
+          runbook: "${runbook_base_url}/namespace-alert-runbooks/job-failed/"
         expr: 'sum by(namespace, job_name) (kube_job_status_failed > 0)'
         for: 15m
         labels:
@@ -13,6 +14,7 @@ groups:
       - alert: JobIncomplete
         annotations:
           message: 'Job {{ $labels.namespace }}/{{ $labels.job_name }} is taking more than 12 hours to complete.'
+          runbook: "${runbook_base_url}/namespace-alert-runbooks/job-incomplete/"
         expr: '(sum by (namespace, job_name) (kube_job_spec_completions) unless sum by (namespace, job_name) (kube_job_complete == 1)) unless sum by (namespace, job_name) (kube_job_status_failed == 1)'
         for: 12h
         labels:
@@ -22,6 +24,7 @@ groups:
       - alert: CompletedJobsNotCleared
         annotations:
           message: 'Namespace {{ $labels.namespace }} has {{ $value }} completed jobs older than 24h.'
+          runbook: "${runbook_base_url}/namespace-alert-runbooks/completed-jobs-not-cleared/"
         expr: 'count by (namespace) (kube_job_status_completion_time < (time() - 86400)) > 20'
         for: 15m
         labels:

@@ -9,6 +9,7 @@
       - alert: NodepoolPodsFull
         annotations:
           message: '{{ if eq $labels.label_agentpool ""}}Control plane or unpooled node"{{ else }}Nodepool {{ $labels.label_agentpool }}{{end}} pod count is {{ printf "%.2f" $value }}% of capacity!'
+          runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pool-pod-capacity/#alert-nodepoolpodsfull"
         expr: "nodepool_allocated_pods/nodepool_allocatable_pods * 100 > 95"
         for: 2m
         labels:
@@ -18,6 +19,7 @@
       - alert: NodepoolReachingPodCapacity
         annotations:
           message: '{{ if eq $labels.label_agentpool ""}}Control plane or unpooled node"{{ else }}Nodepool {{ $labels.label_agentpool }}{{end}} pod count is {{ printf "%.2f" $value }}% of capacity.'
+          runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pool-pod-capacity/#alert-nodepoolreachingpodcapacity"
         expr: 'nodepool_allocated_pods/nodepool_allocatable_pods * 100 > 85'
         for: 10m
         labels:
