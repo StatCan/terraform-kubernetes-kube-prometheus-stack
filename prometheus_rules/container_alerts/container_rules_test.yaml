@@ -31,6 +31,7 @@ tests:
                       namespace: enterprise-search
                   exp_annotations:
                       message: Container enterprise-search/index/alpine has been in ErrImagePull for longer than 15 minutes.
+                      runbook: "${runbook_base_url}/namespace-alert-runbooks/container-waiting/"
           - eval_time: 157m
             alertname: ContainerWaiting
             exp_alerts: []

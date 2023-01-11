@@ -94,6 +94,7 @@ EOF
 | 2022-12-06 | v2.3.0  | Add alert: NodeReadinessFlapping                                                                                                                                                                |
 | 2022-12-15 | v2.3.1  | Fix the NodeUnschedulable alert severity level                                                                                                                                                  |
 | 2023-01-04 | v3.0.0  | Refactor general cluster and namespace alerts. enable_prometheusrules false->true. Removes variables: prometheusrules_labels, cluster_rules_name, namespace_rules_name, cert_manager_rules_name |
+| 2023-01-09 | v3.1.0  | Add runbook links to Prometheus rules                                                                                                                                                           |
 
 ## Upgrading
 

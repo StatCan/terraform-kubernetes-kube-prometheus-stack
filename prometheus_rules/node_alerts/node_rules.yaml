@@ -7,15 +7,17 @@ groups:
       - alert: NodeDiskPressure
         annotations:
           message: 'UNHEALTHY NODE: {{ $labels.node }} has critically low disk capacity.'
+          runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pressure-eviction/#alert-nodediskpressure"
         expr: 'sum by (node) (kube_node_status_condition{condition="DiskPressure",job="kube-state-metrics",status="true"}) == 1'
         for: 2m
         labels:
           scope: cluster
           severity: P2-Major
-          
+
       - alert: NodeMemoryPressure
         annotations:
           message: 'UNHEALTHY NODE: {{ $labels.node }} has critically low memory.'
+          runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pressure-eviction/#alert-nodememorypressure"
         expr: 'sum by (node) (kube_node_status_condition{condition="MemoryPressure",job="kube-state-metrics",status="true"}) == 1'
         for: 2m
         labels:
@@ -25,6 +27,7 @@ groups:
       - alert: NodePIDPressure
         annotations:
           message: 'UNHEALTHY NODE: Too many processes are running on {{ $labels.node }}.'
+          runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pressure-eviction/#alert-nodepidpressure"
         expr: 'sum by (node) (kube_node_status_condition{condition="PIDPressure",job="kube-state-metrics",status="true"}) == 1'
         for: 2m
         labels:
@@ -52,6 +55,7 @@ groups:
       - alert: NodeUnschedulable
         annotations:
           message: '{{ $labels.node }} is unschedulable for over 1 hour. If it is healthy, is it cordoned?'
+          runbook: "${runbook_base_url}/cluster-alert-runbooks/node-unschedulable/"
         expr: 'sum by (node) (kube_node_spec_unschedulable{job="kube-state-metrics"}) == 1'
         for: 1h
         labels:
