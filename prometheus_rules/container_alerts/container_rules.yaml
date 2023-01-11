@@ -5,7 +5,7 @@ groups:
         annotations:
           message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container }} restarted {{ $value }} times in the last 8 hours.'
           runbook: "${runbook_base_url}/namespace-alert-runbooks/many-container-restarts/"
-        expr: 'sum by(container, pod, namespace) (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 8h > 10)'
+        expr: 'sum by(container, pod, namespace) (kube_pod_container_status_restarts_total{job="kube-state-metrics"} - kube_pod_container_status_restarts_total{job="kube-state-metrics"} offset 8h > 10)'
         for: 2m
         labels:
           scope: namespace
