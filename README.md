@@ -4,27 +4,57 @@
 
 This module deploys and configures the Kube-Prometheus Stack inside a Kubernetes Cluster.
 
-## Security Controls
+<!-- BEGIN_TF_DOCS -->
+## Requirements
 
-The following security controls can be met through configuration of this template:
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.0.0 |
 
-* TBD
+## Providers
 
-## Dependencies
+| Name | Version |
+|------|---------|
+| <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.0.0 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | n/a |
 
-* None
 
-## Optional (depending on options configured):
 
-* None
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Version of the Helm chart | `any` | n/a | yes |
+| <a name="input_helm_namespace"></a> [helm\_namespace](#input\_helm\_namespace) | The namespace Helm will install the chart under | `any` | n/a | yes |
+| <a name="input_cluster_domain"></a> [cluster\_domain](#input\_cluster\_domain) | Cluster domain for DestinationRules | `string` | `"cluster.local"` | no |
+| <a name="input_destinationrules_labels"></a> [destinationrules\_labels](#input\_destinationrules\_labels) | Labels applied to DestinationRules | `map(string)` | `{}` | no |
+| <a name="input_destinationrules_mode"></a> [destinationrules\_mode](#input\_destinationrules\_mode) | DestionationRule TLS mode | `string` | `"DISABLE"` | no |
+| <a name="input_enable_destinationrules"></a> [enable\_destinationrules](#input\_enable\_destinationrules) | Creates DestinationRules for Prometheus, Alertmanager, Grafana, and Node Exporters | `bool` | `false` | no |
+| <a name="input_enable_prometheusrules"></a> [enable\_prometheusrules](#input\_enable\_prometheusrules) | Adds PrometheusRules for alerts | `bool` | `true` | no |
+| <a name="input_helm_release"></a> [helm\_release](#input\_helm\_release) | The name of the Helm release | `string` | `"kube-prometheus-stack"` | no |
+| <a name="input_helm_repository"></a> [helm\_repository](#input\_helm\_repository) | The repository where the Helm chart is stored | `string` | `"https://prometheus-community.github.io/helm-charts"` | no |
+| <a name="input_helm_repository_password"></a> [helm\_repository\_password](#input\_helm\_repository\_password) | The password of the repository where the Helm chart is stored | `string` | `""` | no |
+| <a name="input_helm_repository_username"></a> [helm\_repository\_username](#input\_helm\_repository\_username) | The username of the repository where the Helm chart is stored | `string` | `""` | no |
+| <a name="input_prometheus_pvc_name"></a> [prometheus\_pvc\_name](#input\_prometheus\_pvc\_name) | Used for storage alert. Set if using non-default helm\_release | `string` | `"prometheus-kube-prometheus-stack-prometheus-db-prometheus-kube-prometheus-stack-prometheus-0"` | no |
+| <a name="input_values"></a> [values](#input\_values) | Values to be passed to the Helm chart | `string` | `""` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_helm_namespace"></a> [helm\_namespace](#output\_helm\_namespace) | n/a |
+| <a name="output_helm_release"></a> [helm\_release](#output\_helm\_release) | The name of the Helm release. For use by external ServiceMonitors |
+| <a name="output_status"></a> [status](#output\_status) | n/a |
+<!-- END_TF_DOCS -->
 
 ## Usage
 
 ```terraform
 module "helm_kube_prometheus_stack" {
-  source = "git::https://github.com/canada-ca-terraform-modules/terraform-kubernetes-kube-prometheus-stack?ref=v2.0.0"
+  source = "git::https://github.com/canada-ca-terraform-modules/terraform-kubernetes-kube-prometheus-stack?ref=v3.2.0"
 
-  chart_version = "13.10.0"
+  chart_version = "43.3.0"
   depends_on = [
     module.namespace_monitoring,
   ]
@@ -34,13 +64,6 @@ module "helm_kube_prometheus_stack" {
   helm_repository = "https://prometheus-community.github.io/helm-charts"
 
   enable_destinationrules = true
-  enable_prometheusrules  = true
-
-  # Set release to the same value as helm_release. Optionally, add any other desired labels. This variable can be omitted when using the default release name kube-prometheus-stack or when not enabling the additional PrometheusRules.
-  prometheusrules_labels = {
-    app     = "kube-prometheus-stack"
-    release = "kube-prometheus-stack"
-  }
 
   values = <<EOF
 
@@ -53,23 +76,6 @@ EOF
  To upgrade an existing Helm release created from the [previous module](#previous-module) instead of reinstalling into a new Helm release, set `helm_release` to `"prometheus-operator"`. This will persist Helm release history and some temporary data, but may result in resource name and label aberrations.
 
  It is alternatively possible to reinstall into a new release while persisting existing data in Persistent Volumes from the previous module. This process involves downtime and does not guarantee data compatibility. A guide is available [here](#https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack#redeploy-with-new-name-downtime). Note that there are further steps if multiple components (e.g. both Prometheus and Grafana) were configured with Persistent Volume storage. Their Persistent Volumes will need to be given different labels, and the components' `volumeClaimTemplate`s (defined in Helm values) will need to be given corresponding [selectors](https://docs.openshift.com/container-platform/3.3/install_config/persistent_storage/selector_label_binding.html#selector-label-volume-define).
-
-## Variables Values
-
-| Name                        | Type   | Required | Value                                                          |
-| ----------------------------| ------ | -------- | -------------------------------------------------------------- |
-| chart_version               | string | yes      | Version of the Helm chart                                      |
-| helm_namespace              | string | yes      | The namespace Helm will install the chart under                |
-| helm_release                | string | no       | The name of the Helm release. Default `kube-prometheus-stack`  |
-| helm_repository             | string | no       | The repository where the Helm chart is stored                  |
-| helm_repository_username    | string | no       | The username of the repository where the Helm chart is stored  |
-| helm_repository_password    | string | no       | The password of the repository where the Helm chart is stored  |
-| enable_destinationrules     | bool   | no       | For Prometheus, Alertmanager, Grafana, and Node Exporters      |
-| destinationrules_mode       | string | no       | DestinationRule TLS mode. Default `DISABLE`                    |
-| destinationrules_labels     | map    | no       | Labels for DestinationRules                                    |
-| cluster_domain              | string | no       | Cluster domain for DestinationRules. Default `cluster.local`   |
-| enable_prometheusrules      | bool   | no       | Adds PrometheusRules for alerts. Default `true`                |
-| values                      | list   | no       | Values to be passed to the Helm Chart                          |
 
 ## History
 
@@ -96,6 +102,7 @@ EOF
 | 2023-01-04 | v3.0.0  | Refactor general cluster and namespace alerts. enable_prometheusrules false->true. Removes variables: prometheusrules_labels, cluster_rules_name, namespace_rules_name, cert_manager_rules_name |
 | 2023-01-09 | v3.1.0  | Add runbook links to Prometheus rules                                                                                                                                                           |
 | 2023-01-11 | v3.1.1  | Fix ManyContainerRestarts alert to account for multiple metrics sources                                                                                                                         |
+| 2023-01-26 | v3.2.0  | Add alerts: NodeClockSkewDetected and NodeClockNotSynchronising                                                                                                                                 |
 
 ## Upgrading
 
