@@ -52,7 +52,7 @@ This module deploys and configures the Kube-Prometheus Stack inside a Kubernetes
 
 ```terraform
 module "helm_kube_prometheus_stack" {
-  source = "git::https://github.com/canada-ca-terraform-modules/terraform-kubernetes-kube-prometheus-stack?ref=v3.2.0"
+  source = "git::https://github.com/canada-ca-terraform-modules/terraform-kubernetes-kube-prometheus-stack?ref=v3.2.1"
 
   chart_version = "43.3.0"
   depends_on = [
@@ -102,7 +102,8 @@ EOF
 | 2023-01-04 | v3.0.0  | Refactor general cluster and namespace alerts. enable_prometheusrules false->true. Removes variables: prometheusrules_labels, cluster_rules_name, namespace_rules_name, cert_manager_rules_name |
 | 2023-01-09 | v3.1.0  | Add runbook links to Prometheus rules                                                                                                                                                           |
 | 2023-01-11 | v3.1.1  | Fix ManyContainerRestarts alert to account for multiple metrics sources                                                                                                                         |
-| 2023-01-26 | v3.2.0  | Add alerts: NodeClockSkewDetected and NodeClockNotSynchronising                                                                                                                                 |
+| 2023-02-01 | v3.2.0  | Node clock alerts and README update  |
+| 2023-02-03 | v3.2.1  | Specify sensitive variables          |
 
 ## Upgrading
 
