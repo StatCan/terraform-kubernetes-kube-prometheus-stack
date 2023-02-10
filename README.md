@@ -38,6 +38,7 @@ This module deploys and configures the Kube-Prometheus Stack inside a Kubernetes
 | <a name="input_helm_repository_username"></a> [helm\_repository\_username](#input\_helm\_repository\_username) | The username of the repository where the Helm chart is stored | `string` | `""` | no |
 | <a name="input_prometheus_pvc_name"></a> [prometheus\_pvc\_name](#input\_prometheus\_pvc\_name) | Used for storage alert. Set if using non-default helm\_release | `string` | `"prometheus-kube-prometheus-stack-prometheus-db-prometheus-kube-prometheus-stack-prometheus-0"` | no |
 | <a name="input_values"></a> [values](#input\_values) | Values to be passed to the Helm chart | `string` | `""` | no |
+| <a name="alertmanager_replicas"></a> [alertmanager_replicas](#alertmanager\_replicas) | Number of replicas for Alertmanager | `number` | `1` | no |
 
 ## Outputs
 
@@ -104,6 +105,7 @@ EOF
 | 2023-01-11 | v3.1.1  | Fix ManyContainerRestarts alert to account for multiple metrics sources                                                                                                                         |
 | 2023-02-01 | v3.2.0  | Node clock alerts and README update  |
 | 2023-02-03 | v3.2.1  | Specify sensitive variables          |
+| 2023-02-08 | v3.3.0  | Add abilitity to add DestinationRule for Alertmanager replicas          |
 
 ## Upgrading
 

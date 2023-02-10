@@ -66,3 +66,9 @@ variable "prometheus_pvc_name" {
   default     = "prometheus-kube-prometheus-stack-prometheus-db-prometheus-kube-prometheus-stack-prometheus-0"
   description = "Used for storage alert. Set if using non-default helm_release"
 }
+
+variable "alertmanager_replicas" {
+  type        = number
+  default     = 1
+  description = "Number of replicas for Alertmanager"
+}
