@@ -53,7 +53,7 @@ This module deploys and configures the Kube-Prometheus Stack inside a Kubernetes
 
 ```terraform
 module "helm_kube_prometheus_stack" {
-  source = "git::https://github.com/canada-ca-terraform-modules/terraform-kubernetes-kube-prometheus-stack?ref=v3.2.1"
+  source = "git::https://github.com/canada-ca-terraform-modules/terraform-kubernetes-kube-prometheus-stack?ref=v3.3.0"
 
   chart_version = "43.3.0"
   depends_on = [
