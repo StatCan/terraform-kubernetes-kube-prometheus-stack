@@ -131,3 +131,20 @@ resource "kubernetes_manifest" "prometheusrule_prometheus_alerts" {
     }))
   }
 }
+
+resource "kubernetes_manifest" "prometheusrule_coredns_alerts" {
+  count = var.enable_prometheusrules ? 1 : 0
+  manifest = {
+    "apiVersion" = "monitoring.coreos.com/v1"
+    "kind"       = "PrometheusRule"
+    "metadata" = {
+      "name"      = "coredns-alerts"
+      "namespace" = var.helm_namespace
+      "labels"    = merge(local.common_labels, { "app.kubernetes.io/name" = "coredns-alerts" })
+      "annotations" = {
+        "rules-definition" = "${local.rules_base_path}/coredns_alerts/coredns_rules.yaml"
+      }
+    }
+    "spec" = yamldecode("${path.module}/prometheus_rules/coredns_alerts/coredns_rules.yaml")
+  }
+}
