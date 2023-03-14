@@ -15,7 +15,18 @@ groups:
         annotations:
           message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container }} has been in {{ $labels.reason }} for longer than 15 minutes.'
           runbook: "${runbook_base_url}/namespace-alert-runbooks/container-waiting/"
-        expr: 'sum by (container, pod, namespace, reason) (avg_over_time(kube_pod_container_status_waiting_reason{reason!="CrashLoopBackOff"}[15m:])) > 0.8'
+        expr: 'sum by (container, pod, namespace, reason) (kube_pod_container_status_waiting_reason{reason!~"CrashLoopBackOff|ErrImagePull|ImagePullBackOff"}) == 1'
+        for: 15m
+        labels:
+          scope: namespace
+          severity: P3-Minor
+      
+      # pint disable promql/series
+      - alert: ContainerImagePullProblem
+        annotations:
+          message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container}} has been in ErrImagePull and/or ImagePullBackOff for longer than 15 minutes.'
+          runbook: "${runbook_base_url}/namespace-alert-runbooks/container-waiting/#errimagepull"
+        expr: 'sum by (container, pod, namespace, reason) (kube_pod_container_status_waiting_reason{reason=~"ErrImagePull|ImagePullBackOff"}) == 1'
         for: 15m
         labels:
           scope: namespace
