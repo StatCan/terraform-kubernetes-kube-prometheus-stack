@@ -145,6 +145,6 @@ resource "kubernetes_manifest" "prometheusrule_coredns_alerts" {
         "rules-definition" = "${local.rules_base_path}/coredns_alerts/coredns_rules.yaml"
       }
     }
-    "spec" = yamldecode("${path.module}/prometheus_rules/coredns_alerts/coredns_rules.yaml")
+    "spec" = yamldecode(file("${path.module}/prometheus_rules/coredns_alerts/coredns_rules.yaml"))
   }
 }
