@@ -80,33 +80,34 @@ EOF
 
 ## History
 
-| Date       | Release | Change                                                                                                                                                                                          |
-| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 2021-03-26 | v1.0.0  | 1st release                                                                                                                                                                                     |
-| 2021-07-05 | v1.1.0  | 1st set of general project alerts                                                                                                                                                               |
-| 2021-09-07 | v1.1.1  | `CompletedJobsNotCleared` scope set to `project`                                                                                                                                                |
-| 2022-03-16 | v2.0.0  | Convert DestinationRules and PrometheusRules to `kubernetes_manifest`s. Updates for Terraform v1 and nomenclature                                                                               |
-| 2022-07-28 | v2.0.1  | PrometheusRule severity label updates                                                                                                                                                           |
-| 2022-08-10 | v2.0.2  | Refactor the threshold for the VeleroHourlyBackupPartialFailure & VeleroHourlyBackupFailure alert                                                                                               |
-| 2022-08-10 | v2.0.3  | Create the NodeDiskMayFillIn60Hours alert                                                                                                                                                       |
-| 2022-08-10 | v2.0.4  | Delete the ManyAlertsFiring & ManyManyAlertsFiring alerts                                                                                                                                       |
-| 2022-08-19 | v2.0.5  | Create the VeleroBackupTakingLongTime alert                                                                                                                                                     |
-| 2022-08-22 | v2.0.6  | Fix the VeleroBackupTakingLongTime alert severity level                                                                                                                                         |
-| 2022-08-31 | v2.0.7  | Update nodepool pod capacity alerts and remove unused recording rule                                                                                                                            |
-| 2022-09-02 | v2.0.8  | Update threshold for when to expect a backup for the VeleroBackupTakingLongTime alert                                                                                                           |
-| 2022-11-04 | v2.1.0  | Add several alerts and associated test cases regarding cert manager certificates                                                                                                                |
-| 2022-11-08 | v2.1.1  | Adjust ContainerWaiting alert duration to align with PodNotReady                                                                                                                                |
-| 2022-11-16 | v2.1.2  | Fix node and nodepool pod capacity, NodePodsFull, and NodeReachingPodCapacity alerts                                                                                                            |
-| 2022-11-24 | v2.2.0  | Add alert: PrometheusDiskMayFillIn60Hours                                                                                                                                                       |
-| 2022-12-06 | v2.3.0  | Add alert: NodeReadinessFlapping                                                                                                                                                                |
-| 2022-12-15 | v2.3.1  | Fix the NodeUnschedulable alert severity level                                                                                                                                                  |
+| Date       | Release | Change |
+| ---------- | ------- | ------ |
+| 2021-03-26 | v1.0.0  | 1st release |
+| 2021-07-05 | v1.1.0  | 1st set of general project alerts |
+| 2021-09-07 | v1.1.1  | `CompletedJobsNotCleared` scope set to `project` |
+| 2022-03-16 | v2.0.0  | Convert DestinationRules and PrometheusRules to `kubernetes_manifest`s. Updates for Terraform v1 and nomenclature |
+| 2022-07-28 | v2.0.1  | PrometheusRule severity label updates |
+| 2022-08-10 | v2.0.2  | Refactor the threshold for the VeleroHourlyBackupPartialFailure & VeleroHourlyBackupFailure alert |
+| 2022-08-10 | v2.0.3  | Create the NodeDiskMayFillIn60Hours alert |
+| 2022-08-10 | v2.0.4  | Delete the ManyAlertsFiring & ManyManyAlertsFiring alerts |
+| 2022-08-19 | v2.0.5  | Create the VeleroBackupTakingLongTime alert |
+| 2022-08-22 | v2.0.6  | Fix the VeleroBackupTakingLongTime alert severity level |
+| 2022-08-31 | v2.0.7  | Update nodepool pod capacity alerts and remove unused recording rule |
+| 2022-09-02 | v2.0.8  | Update threshold for when to expect a backup for the VeleroBackupTakingLongTime alert |
+| 2022-11-04 | v2.1.0  | Add several alerts and associated test cases regarding cert manager certificates |
+| 2022-11-08 | v2.1.1  | Adjust ContainerWaiting alert duration to align with PodNotReady |
+| 2022-11-16 | v2.1.2  | Fix node and nodepool pod capacity, NodePodsFull, and NodeReachingPodCapacity alerts |
+| 2022-11-24 | v2.2.0  | Add alert: PrometheusDiskMayFillIn60Hours |
+| 2022-12-06 | v2.3.0  | Add alert: NodeReadinessFlapping |
+| 2022-12-15 | v2.3.1  | Fix the NodeUnschedulable alert severity level |
 | 2023-01-04 | v3.0.0  | Refactor general cluster and namespace alerts. enable_prometheusrules false->true. Removes variables: prometheusrules_labels, cluster_rules_name, namespace_rules_name, cert_manager_rules_name |
-| 2023-01-09 | v3.1.0  | Add runbook links to Prometheus rules                                                                                                                                                           |
-| 2023-01-11 | v3.1.1  | Fix ManyContainerRestarts alert to account for multiple metrics sources                                                                                                                         |
+| 2023-01-09 | v3.1.0  | Add runbook links to Prometheus rules |
+| 2023-01-11 | v3.1.1  | Fix ManyContainerRestarts alert to account for multiple metrics sources |
 | 2023-02-01 | v3.2.0  | Node clock alerts and README update  |
 | 2023-02-03 | v3.2.1  | Specify sensitive variables          |
-| 2023-02-08 | v3.3.0  | Add abilitity to add DestinationRule for Alertmanager replicas          |
-| 2023-02-16 | v3.4.0  | Add rules for CoreDNS alerts          |
+| 2023-02-08 | v3.3.0  | Add abilitity to add DestinationRule for Alertmanager replicas |
+| 2023-02-16 | v3.4.0  | Add rules for CoreDNS alerts |
+| 2023-03-10 | v3.4.1  | Fix syntax error in CoreDNS alert rules |
 
 ## Upgrading
 
