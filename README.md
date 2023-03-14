@@ -108,6 +108,7 @@ EOF
 | 2023-02-08 | v3.3.0  | Add abilitity to add DestinationRule for Alertmanager replicas |
 | 2023-02-16 | v3.4.0  | Add rules for CoreDNS alerts |
 | 2023-03-10 | v3.4.1  | Fix syntax error in CoreDNS alert rules |
+| 2023-03-14 | v3.5.0  | Add rule for ContainerImagePullProblem, refactor container alert unit tests |
 
 ## Upgrading
 
