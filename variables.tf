@@ -33,6 +33,13 @@ variable "enable_destinationrules" {
   default     = false
   description = "Creates DestinationRules for Prometheus, Alertmanager, Grafana, and Node Exporters"
 }
+
+variable "enable_thanos_destinationrules" {
+  type        = bool
+  default     = false
+  description = "Creates DestinationRule for Thanos Sidecar"
+}
+
 variable "destinationrules_mode" {
   type        = string
   default     = "DISABLE"
