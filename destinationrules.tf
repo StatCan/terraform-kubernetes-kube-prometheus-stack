@@ -102,3 +102,24 @@ resource "kubernetes_manifest" "destinationrule_kube_prometheus_stack_prometheus
     }
   }
 }
+
+resource "kubernetes_manifest" "destinationrule_thanos_sidecar" {
+  count = var.enable_thanos_destinationrules ? 1 : 0
+  manifest = {
+    "apiVersion" = "networking.istio.io/v1beta1"
+    "kind"       = "DestinationRule"
+    "metadata" = {
+      "labels"    = merge(var.destinationrules_labels, local.common_labels)
+      "name"      = "thanos-sidecar"
+      "namespace" = "${var.helm_namespace}"
+    }
+    "spec" = {
+      "host" = "${var.helm_release}-thanos-discovery.${var.helm_namespace}.svc.${var.cluster_domain}"
+      "trafficPolicy" = {
+        "tls" = {
+          "mode" = var.destinationrules_mode
+        }
+      }
+    }
+  }
+}
