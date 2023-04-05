@@ -110,6 +110,7 @@ EOF
 | 2023-03-10 | v3.4.1  | Fix syntax error in CoreDNS alert rules |
 | 2023-03-14 | v3.5.0  | Add rule for ContainerImagePullProblem, refactor container alert unit tests |
 | 2023-03-15 | v3.6.0  | Add DestinationRule for Thanos Sidecar |
+| 2023-03-28 | v3.7.0  | Add generic PVC alerts |
 ## Upgrading
 
 ### From v1.x to v2.x

@@ -1,0 +1,42 @@
+groups:
+  - name: pvc.rules
+    rules:
+      - alert: PVCStorageRemainingLow
+        annotations:
+          message: 'The PVC named {{ $labels.persistentvolumeclaim }} in namespace {{ $labels.namespace }} has less than 15% storage remaining'
+          runbook: "${runbook_base_url}/namespace-alert-runbooks/persistent-volume-claims/#resolution-process"
+        expr: sum by (persistentvolumeclaim, namespace) (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes) * 100 < 15
+        for: 15m
+        labels:
+          scope: namespace
+          severity: P3-Minor
+
+      - alert: PVCStorageRemainingNone
+        annotations:
+          message: 'The PVC named {{ $labels.persistentvolumeclaim }} in namespace {{ $labels.namespace }} has no storage remaining'
+          runbook: "${runbook_base_url}/namespace-alert-runbooks/persistent-volume-claims/#resolution-process"
+        expr: sum by (persistentvolumeclaim, namespace) (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes) * 100 < 1
+        for: 15m
+        labels:
+          scope: namespace
+          severity: P2-Major
+
+      - alert: KubePersistentVolumeStatusFailed
+        annotations:
+          message: 'The persistent volume {{ $labels.persistentvolume }} has status {{ $labels.phase }}.'
+          runbook: "https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubepersistentvolumeerrors"
+        expr: kube_persistentvolume_status_phase{phase="Failed",job="kube-state-metrics"} > 0
+        for: 1m
+        labels:
+          severity: P2-Major
+          scope: namespace
+
+      - alert: KubePersistentVolumeStatusPending
+        annotations:
+          message: 'The persistent volume {{ $labels.persistentvolume }} has status {{ $labels.phase }}.'
+          runbook: "https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubepersistentvolumeerrors"
+        expr: kube_persistentvolume_status_phase{phase="Pending",job="kube-state-metrics"} > 0
+        for: 30m
+        labels:
+          severity: P2-Major
+          scope: namespace
