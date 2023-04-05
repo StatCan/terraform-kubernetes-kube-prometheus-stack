@@ -148,3 +148,22 @@ resource "kubernetes_manifest" "prometheusrule_coredns_alerts" {
     "spec" = yamldecode(file("${path.module}/prometheus_rules/coredns_alerts/coredns_rules.yaml"))
   }
 }
+
+resource "kubernetes_manifest" "prometheusrule_pvc_alerts" {
+  count = var.enable_prometheusrules ? 1 : 0
+  manifest = {
+    "apiVersion" = "monitoring.coreos.com/v1"
+    "kind"       = "PrometheusRule"
+    "metadata" = {
+      "name"      = "pvc-alerts"
+      "namespace" = var.helm_namespace
+      "labels"    = merge(local.common_labels, { "app.kubernetes.io/name" = "pvc-alerts" })
+      "annotations" = {
+        "rules-definition" = "${local.rules_base_path}/pvc_alerts/pvc_rules.yaml"
+      }
+    }
+    "spec" = yamldecode(templatefile("${path.module}/prometheus_rules/pvc_alerts/pvc_rules.yaml", {
+      runbook_base_url = local.runbook_base_url
+    }))
+  }
+}
