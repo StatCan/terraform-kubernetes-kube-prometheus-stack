@@ -5,7 +5,7 @@ groups:
         annotations:
           message: 'SSL certificate for {{ $labels.instance }} expires in less than 20 days.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/ssl-cert-expiring-soon/"
-        expr: 'sum by (target, instance) (probe_ssl_earliest_cert_expiry{job="blackbox-exporter-prometheus-blackbox-exporter"} - time()) < 86400 * 20'
+        expr: 'sum by (cluster, target, instance) (probe_ssl_earliest_cert_expiry{job="blackbox-exporter-prometheus-blackbox-exporter"} - time()) < 86400 * 20'
         for: 2m
         labels:
           scope: cluster

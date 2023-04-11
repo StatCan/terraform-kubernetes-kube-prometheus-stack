@@ -7,7 +7,7 @@ groups:
         annotations:
           message: 'Prometheus storage has {{ printf "%.2f" $value }}% capacity remaining.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/prometheus-storage-low/#resolution-process"
-        expr: 'sum by (persistentvolumeclaim, namespace, node)  (kubelet_volume_stats_available_bytes{persistentvolumeclaim="${prometheus_pvc_name}"} / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${prometheus_pvc_name}"}) * 100 < 15'
+        expr: 'sum by (cluster, persistentvolumeclaim, namespace, node)  (kubelet_volume_stats_available_bytes{persistentvolumeclaim="${prometheus_pvc_name}"} / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${prometheus_pvc_name}"}) * 100 < 15'
         for: 15m
         labels:
           scope: cluster
@@ -17,7 +17,7 @@ groups:
         annotations:
           message: 'Prometheus storage is predicted to have {{ printf "%.2f" $value }}% capacity remaining 60 hours from now and will run out of space soon.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/prometheus-storage-low/#resolution-process"
-        expr: 'sum by (persistentvolumeclaim, namespace, node) ((predict_linear(kubelet_volume_stats_available_bytes{persistentvolumeclaim="${prometheus_pvc_name}"}[7d], 60 * 3600)) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${prometheus_pvc_name}"} * 100 < 10)'
+        expr: 'sum by (cluster, persistentvolumeclaim, namespace, node) ((predict_linear(kubelet_volume_stats_available_bytes{persistentvolumeclaim="${prometheus_pvc_name}"}[7d], 60 * 3600)) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${prometheus_pvc_name}"} * 100 < 10)'
         for: 30m
         labels:
             scope: cluster

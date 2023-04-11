@@ -1,9 +1,9 @@
  groups:
   - name: nodepool-status.rules
     rules:
-      - expr: 'sum(kube_node_status_allocatable{resource="pods", job="kube-state-metrics"} * on (node) group_left(label_agentpool) kube_node_labels{job="kube-state-metrics"}) by (label_agentpool)'
+      - expr: 'sum(kube_node_status_allocatable{resource="pods", job="kube-state-metrics"} * on (node) group_left(label_agentpool) kube_node_labels{job="kube-state-metrics"}) by (label_agentpool, cluster)'
         record: nodepool_allocatable_pods
-      - expr: 'sum(kube_pod_info * on (node) group_left(label_agentpool) kube_node_labels{job="kube-state-metrics"}) by (label_agentpool)'
+      - expr: 'sum(kube_pod_info * on (node) group_left(label_agentpool) kube_node_labels{job="kube-state-metrics"}) by (label_agentpool, cluster)'
         record: nodepool_allocated_pods
 
       - alert: NodepoolPodsFull

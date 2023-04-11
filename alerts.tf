@@ -167,3 +167,20 @@ resource "kubernetes_manifest" "prometheusrule_pvc_alerts" {
     }))
   }
 }
+
+resource "kubernetes_manifest" "prometheusrule_heartbeat_alerts" {
+  count = var.enable_prometheusrules ? 1 : 0
+  manifest = {
+    "apiVersion" = "monitoring.coreos.com/v1"
+    "kind"       = "PrometheusRule"
+    "metadata" = {
+      "name"      = "heartbeat-alerts"
+      "namespace" = var.helm_namespace
+      "labels"    = merge(local.common_labels, { "app.kubernetes.io/name" = "heartbeat-alerts" }, { "role" = "thanos-watcher" })
+      "annotations" = {
+        "rules-definition" = "${local.rules_base_path}/prometheus_heartbeat_alerts/prometheus_heartbeat_rules.yaml"
+      }
+    }
+    "spec" = yamldecode(file("${path.module}/prometheus_rules/prometheus_heartbeat_alerts/prometheus_heartbeat_rules.yaml"))
+  }
+}

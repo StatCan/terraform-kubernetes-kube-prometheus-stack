@@ -5,7 +5,7 @@ groups:
         annotations:
           message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container }} restarted {{ $value }} times in the last 8 hours.'
           runbook: "${runbook_base_url}/namespace-alert-runbooks/many-container-restarts/"
-        expr: 'sum by(container, pod, namespace) (kube_pod_container_status_restarts_total{job="kube-state-metrics"} - kube_pod_container_status_restarts_total{job="kube-state-metrics"} offset 8h > 10)'
+        expr: 'sum by (cluster, container, pod, namespace) (kube_pod_container_status_restarts_total{job="kube-state-metrics"} - kube_pod_container_status_restarts_total{job="kube-state-metrics"} offset 8h > 10)'
         for: 2m
         labels:
           scope: namespace
@@ -15,18 +15,18 @@ groups:
         annotations:
           message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container }} has been in {{ $labels.reason }} for longer than 15 minutes.'
           runbook: "${runbook_base_url}/namespace-alert-runbooks/container-waiting/"
-        expr: 'sum by (container, pod, namespace, reason) (kube_pod_container_status_waiting_reason{reason!~"CrashLoopBackOff|ErrImagePull|ImagePullBackOff"}) == 1'
+        expr: 'sum by (cluster, container, pod, namespace, reason) (kube_pod_container_status_waiting_reason{reason!~"CrashLoopBackOff|ErrImagePull|ImagePullBackOff"}) == 1'
         for: 15m
         labels:
           scope: namespace
           severity: P3-Minor
-      
+
       # pint disable promql/series
       - alert: ContainerImagePullProblem
         annotations:
           message: 'Container {{ $labels.namespace }}/{{ $labels.pod }}/{{ $labels.container}} has been in ErrImagePull and/or ImagePullBackOff for longer than 15 minutes.'
           runbook: "${runbook_base_url}/namespace-alert-runbooks/container-waiting/#errimagepull"
-        expr: 'sum by (container, pod, namespace, reason) (kube_pod_container_status_waiting_reason{reason=~"ErrImagePull|ImagePullBackOff"}) == 1'
+        expr: 'sum by (cluster, container, pod, namespace, reason) (kube_pod_container_status_waiting_reason{reason=~"ErrImagePull|ImagePullBackOff"}) == 1'
         for: 15m
         labels:
           scope: namespace
