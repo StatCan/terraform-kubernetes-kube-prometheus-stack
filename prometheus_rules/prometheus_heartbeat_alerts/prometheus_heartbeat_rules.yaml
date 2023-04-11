@@ -1,0 +1,6 @@
+# This recording rule exists so that there is a metric named prometheus_heartbeat that will always have the name of the cluster in the form of "cluster: clusterABC"
+groups:
+ - name: prometheus-heartbeat.rules
+   rules:
+    - record: prometheus_heartbeat
+      expr: 'vector(1)'
