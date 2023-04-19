@@ -6,7 +6,7 @@ groups:
   - alert: CoreDNSDown
     annotations:
       message: 'CoreDNS has disappeared from Prometheus target discovery.'
-    expr: 'sum by (cluster) (prometheus_heartbeat) unless (sum by (cluster) (up{job="coredns"}) == 1)'
+    expr: 'sum by (cluster) (prometheus_heartbeat) unless (sum by (cluster) (up{job="coredns"} == 1))'
     for: 15m
     labels:
       scope: cluster
