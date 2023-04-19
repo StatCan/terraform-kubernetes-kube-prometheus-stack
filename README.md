@@ -112,6 +112,7 @@ EOF
 | 2023-03-15 | v3.6.0  | Add DestinationRule for Thanos Sidecar |
 | 2023-03-28 | v3.7.0  | Add generic PVC alerts |
 | 2023-04-05 | v3.8.0  | Add "cluster" in prometheus rule aggregations to make compatible with Thanos. Add Prometheus heartbeat recording rule |
+| 2023-04-19 | v3.8.1  | Fix CoreDNSDown alert |
 ## Upgrading
 
 ### From v1.x to v2.x
