@@ -114,7 +114,7 @@ EOF
 | 2023-04-05 | v3.8.0  | Add "cluster" in prometheus rule aggregations to make compatible with Thanos. Add Prometheus heartbeat recording rule |
 | 2023-04-19 | v3.8.1  | Fix CoreDNSDown alert |
 | 2023-04-21 | v3.8.2  | Ensure prometheus heartbeat recording rule is evaluated by Prometheus |
-| 2023-04-21 | v3.8.3  | Fix ContainerImagePullProblem flapping |
+| 2023-05-04 | v3.8.3  | Fix ContainerImagePullProblem flapping |
 
 ## Upgrading
 
