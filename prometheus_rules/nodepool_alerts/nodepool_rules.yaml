@@ -1,16 +1,16 @@
  groups:
   - name: nodepool-status.rules
     rules:
-      - expr: 'sum(kube_node_status_allocatable{resource="pods", job="kube-state-metrics"} * on (node) group_left(label_agentpool) kube_node_labels{job="kube-state-metrics"}) by (label_agentpool, cluster)'
+      - expr: 'sum by (cluster, label_agentpool) (kube_node_status_allocatable{resource="pods", job="kube-state-metrics"} * on (cluster, node) group_left(label_agentpool) kube_node_labels{job="kube-state-metrics"})'
         record: nodepool_allocatable_pods
-      - expr: 'sum(kube_pod_info * on (node) group_left(label_agentpool) kube_node_labels{job="kube-state-metrics"}) by (label_agentpool, cluster)'
-        record: nodepool_allocated_pods
+      - expr: 'sum by (cluster, label_agentpool, thanos_ruler_replica) (node_unterminated_pods_total * on (cluster, node) group_left(label_agentpool) kube_node_labels{job="kube-state-metrics"})'
+        record: nodepool_allocated_pods_total
 
       - alert: NodepoolPodsFull
         annotations:
           message: '{{ if eq $labels.label_agentpool ""}}Control plane or unpooled node"{{ else }}Nodepool {{ $labels.label_agentpool }}{{end}} pod count is {{ printf "%.2f" $value }}% of capacity!'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pool-pod-capacity/#alert-nodepoolpodsfull"
-        expr: "nodepool_allocated_pods/nodepool_allocatable_pods * 100 > 95"
+        expr: "nodepool_allocated_pods_total/nodepool_allocatable_pods * 100 > 95"
         for: 2m
         labels:
           scope: cluster
@@ -20,7 +20,7 @@
         annotations:
           message: '{{ if eq $labels.label_agentpool ""}}Control plane or unpooled node"{{ else }}Nodepool {{ $labels.label_agentpool }}{{end}} pod count is {{ printf "%.2f" $value }}% of capacity.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pool-pod-capacity/#alert-nodepoolreachingpodcapacity"
-        expr: 'nodepool_allocated_pods/nodepool_allocatable_pods * 100 > 85'
+        expr: 'nodepool_allocated_pods_total/nodepool_allocatable_pods * 100 > 85'
         for: 10m
         labels:
           scope: cluster
