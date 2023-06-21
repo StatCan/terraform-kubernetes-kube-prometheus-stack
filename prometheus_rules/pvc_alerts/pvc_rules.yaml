@@ -21,11 +21,12 @@ groups:
           scope: namespace
           severity: P2-Major
 
+      # The following 2 alerts use label replacement to set the 'namespace' label to the PersistentVolumeClaim's namespace instead of the kube-state-metrics namespace
       - alert: KubePersistentVolumeStatusFailed
         annotations:
-          message: 'The persistent volume {{ $labels.persistentvolume }} has status {{ $labels.phase }}.'
+          message: 'The persistent volume {{ $labels.persistentvolume }}, associated with claim {{ $labels.name }} in namespace {{ $labels.namespace }}, has status Failed.'
           runbook: "https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubepersistentvolumeerrors"
-        expr: kube_persistentvolume_status_phase{phase="Failed",job="kube-state-metrics"} > 0
+        expr: sum without (claim_namespace) (label_replace(sum by (name, persistentvolume, claim_namespace) (kube_persistentvolume_status_phase{phase="Failed",job="kube-state-metrics"} * on (persistentvolume) group_right kube_persistentvolume_claim_ref > 0), "namespace", "$1", "claim_namespace", "(.*)"))
         for: 1m
         labels:
           severity: P2-Major
@@ -33,9 +34,9 @@ groups:
 
       - alert: KubePersistentVolumeStatusPending
         annotations:
-          message: 'The persistent volume {{ $labels.persistentvolume }} has status {{ $labels.phase }}.'
+          message: 'The persistent volume {{ $labels.persistentvolume }}, associated with claim {{ $labels.name }} in namespace {{ $labels.namespace }}, has status Pending for over 30 minutes.'
           runbook: "https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubepersistentvolumeerrors"
-        expr: kube_persistentvolume_status_phase{phase="Pending",job="kube-state-metrics"} > 0
+        expr: sum without (claim_namespace) (label_replace(sum by (name, persistentvolume, claim_namespace) (kube_persistentvolume_status_phase{phase="Pending",job="kube-state-metrics"} * on (persistentvolume) group_right kube_persistentvolume_claim_ref > 0), "namespace", "$1", "claim_namespace", "(.*)"))
         for: 30m
         labels:
           severity: P2-Major

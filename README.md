@@ -116,6 +116,7 @@ EOF
 | 2023-04-21 | v3.8.2  | Ensure prometheus heartbeat recording rule is evaluated by Prometheus |
 | 2023-05-04 | v3.8.3  | Fix ContainerImagePullProblem flapping |
 | 2023-06-08 | v3.9.0  | Ignore terminated pods in pod capacity alerts |
+| 2023-06-19 | v3.9.1  | Fix PersistentVolume status alerts |
 
 ## Upgrading
 
