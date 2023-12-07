@@ -117,6 +117,7 @@ EOF
 | 2023-05-04 | v3.8.3  | Fix ContainerImagePullProblem flapping |
 | 2023-06-08 | v3.9.0  | Ignore terminated pods in pod capacity alerts |
 | 2023-06-19 | v3.9.1  | Fix PersistentVolume status alerts |
+| 2023-12-07 | v3.9.2  | Adjust node alerts for clock synchronization |
 
 ## Upgrading
 
