@@ -3,7 +3,7 @@ groups:
     rules:
       - alert: PVCStorageRemainingLow
         annotations:
-          message: 'The PVC named {{ $labels.persistentvolumeclaim }} in namespace {{ $labels.namespace }} has less than 15% storage remaining'
+          message: 'The PVC named {{ $labels.persistentvolumeclaim }} in namespace {{ $labels.namespace }} has {{ printf "%.2f" $value }}% storage remaining'
           runbook: "${runbook_base_url}/namespace-alert-runbooks/persistent-volume-claims/#resolution-process"
         expr: sum by (cluster, persistentvolumeclaim, namespace) (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes) * 100 < 15
         for: 15m
@@ -15,8 +15,8 @@ groups:
         annotations:
           message: 'The PVC named {{ $labels.persistentvolumeclaim }} in namespace {{ $labels.namespace }} has no storage remaining'
           runbook: "${runbook_base_url}/namespace-alert-runbooks/persistent-volume-claims/#resolution-process"
-        expr: sum by (cluster, persistentvolumeclaim, namespace) (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes) * 100 < 1
-        for: 15m
+        expr: sum by (cluster, persistentvolumeclaim, namespace) (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes) * 100 < 5
+        for: 5m
         labels:
           scope: namespace
           severity: P2-Major

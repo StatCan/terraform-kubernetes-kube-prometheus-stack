@@ -11,7 +11,6 @@ groups:
           message: 'UNHEALTHY NODE: {{ $labels.node }} has critically low disk capacity.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pressure-eviction/#alert-nodediskpressure"
         expr: 'sum by (cluster, node) (kube_node_status_condition{condition="DiskPressure",job="kube-state-metrics",status="true"}) == 1'
-        for: 2m
         labels:
           scope: cluster
           severity: P2-Major
@@ -21,7 +20,6 @@ groups:
           message: 'UNHEALTHY NODE: {{ $labels.node }} has critically low memory.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pressure-eviction/#alert-nodememorypressure"
         expr: 'sum by (cluster, node) (kube_node_status_condition{condition="MemoryPressure",job="kube-state-metrics",status="true"}) == 1'
-        for: 2m
         labels:
           scope: cluster
           severity: P2-Major
@@ -31,7 +29,6 @@ groups:
           message: 'UNHEALTHY NODE: Too many processes are running on {{ $labels.node }}.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pressure-eviction/#alert-nodepidpressure"
         expr: 'sum by (cluster, node) (kube_node_status_condition{condition="PIDPressure",job="kube-state-metrics",status="true"}) == 1'
-        for: 2m
         labels:
           scope: cluster
           severity: P2-Major
@@ -40,7 +37,7 @@ groups:
         annotations:
           message: '{{ $labels.node }} is not in a Ready state but did not trip a Network or Pressure condition.'
         expr: 'sum by (cluster, node) (kube_node_status_condition{condition="Ready",job="kube-state-metrics",status="true"}) == 0'
-        for: 2m
+        for: 10m
         labels:
           scope: cluster
           severity: P2-Major

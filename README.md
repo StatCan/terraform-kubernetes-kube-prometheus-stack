@@ -118,6 +118,7 @@ EOF
 | 2023-06-08 | v3.9.0  | Ignore terminated pods in pod capacity alerts |
 | 2023-06-19 | v3.9.1  | Fix PersistentVolume status alerts |
 | 2023-12-07 | v3.9.2  | Adjust node alerts for clock synchronization |
+| 2024-02-29 | v3.9.3  | Adjust Node and PVC storage alerts |
 
 ## Upgrading
 
