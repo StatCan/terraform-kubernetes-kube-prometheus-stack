@@ -3,14 +3,14 @@ groups:
     rules:
       - expr: 'sum by (cluster, nodename) (avg by(cluster, instance, job) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * on(cluster, instance, job) group_left(nodename) node_uname_info * 100)'
         record: node_cpu_available
-      - expr: 'sum by (cluster, node) (kube_pod_info{job="kube-state-metrics"} unless on (cluster, uid) kube_pod_status_phase{job="kube-state-metrics", phase=~"Failed|Succeeded"} == 1)'
+      - expr: 'sum by (cluster, node) (kube_pod_info{job="kube-state-metrics"} unless on (cluster, uid) kube_pod_status_phase{job="kube-state-metrics", phase=~"Failed|Succeeded"} == 1) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         record: node_unterminated_pods_total
 
       - alert: NodeDiskPressure
         annotations:
           message: 'UNHEALTHY NODE: {{ $labels.node }} has critically low disk capacity.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pressure-eviction/#alert-nodediskpressure"
-        expr: 'sum by (cluster, node) (kube_node_status_condition{condition="DiskPressure",job="kube-state-metrics",status="true"}) == 1'
+        expr: '(sum by (cluster, node) (kube_node_status_condition{condition="DiskPressure",job="kube-state-metrics",status="true"}) == 1) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         labels:
           scope: cluster
           severity: P2-Major
@@ -19,7 +19,7 @@ groups:
         annotations:
           message: 'UNHEALTHY NODE: {{ $labels.node }} has critically low memory.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pressure-eviction/#alert-nodememorypressure"
-        expr: 'sum by (cluster, node) (kube_node_status_condition{condition="MemoryPressure",job="kube-state-metrics",status="true"}) == 1'
+        expr: '(sum by (cluster, node) (kube_node_status_condition{condition="MemoryPressure",job="kube-state-metrics",status="true"}) == 1) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         labels:
           scope: cluster
           severity: P2-Major
@@ -28,7 +28,7 @@ groups:
         annotations:
           message: 'UNHEALTHY NODE: Too many processes are running on {{ $labels.node }}.'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/node-pressure-eviction/#alert-nodepidpressure"
-        expr: 'sum by (cluster, node) (kube_node_status_condition{condition="PIDPressure",job="kube-state-metrics",status="true"}) == 1'
+        expr: '(sum by (cluster, node) (kube_node_status_condition{condition="PIDPressure",job="kube-state-metrics",status="true"}) == 1) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         labels:
           scope: cluster
           severity: P2-Major
@@ -36,7 +36,7 @@ groups:
       - alert: NodeNotReady
         annotations:
           message: '{{ $labels.node }} is not in a Ready state but did not trip a Network or Pressure condition.'
-        expr: 'sum by (cluster, node) (kube_node_status_condition{condition="Ready",job="kube-state-metrics",status="true"}) == 0'
+        expr: '(sum by (cluster, node) (kube_node_status_condition{condition="Ready",job="kube-state-metrics",status="true"}) == 0) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 10m
         labels:
           scope: cluster
@@ -45,7 +45,7 @@ groups:
       - alert: NodeReadinessFlapping
         annotations:
           message: The readiness status of node {{ $labels.node }} has changed {{ $value }} times in the last 15 minutes.
-        expr: sum by (cluster, cluster, node) (changes(kube_node_status_condition{condition="Ready",status="true"}[15m])) > 2
+        expr: '(sum by (cluster, cluster, node) (changes(kube_node_status_condition{condition="Ready",status="true"}[15m])) > 2) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 15m
         labels:
           scope: cluster
@@ -55,7 +55,7 @@ groups:
         annotations:
           message: '{{ $labels.node }} is unschedulable for over 1 hour. If it is healthy, is it cordoned?'
           runbook: "${runbook_base_url}/cluster-alert-runbooks/node-unschedulable/"
-        expr: 'sum by (cluster, node) (kube_node_spec_unschedulable{job="kube-state-metrics"}) == 1'
+        expr: '(sum by (cluster, node) (kube_node_spec_unschedulable{job="kube-state-metrics"}) == 1) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 1h
         labels:
           scope: cluster
@@ -63,8 +63,8 @@ groups:
 
       - alert: NodeClockNotSynchronising
         annotations:
-          message: 'Clock on {{ $labels.kubernetes_node }} is not synchronising for more than 20 minutes. Ensure NTP is configured on this host.'
-        expr: 'sum by (cluster, kubernetes_node) (min_over_time(node_timex_sync_status[5m]) == 0 and node_timex_maxerror_seconds >= 16)'
+          message: 'Clock on {{ $labels.node }} is not synchronising for more than 20 minutes. Ensure NTP is configured on this host.'
+        expr: 'sum by (cluster, node) (sum without (kubernetes_node) (label_replace(min_over_time(node_timex_sync_status[5m]) == 0 and node_timex_maxerror_seconds >= 16, "node", "$1", "kubernetes_node", "(.*)"))) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 20m
         labels:
           scope: cluster
@@ -72,8 +72,8 @@ groups:
 
       - alert: NodeClockSkewDetected
         annotations:
-          message: 'Clock on {{ $labels.kubernetes_node }} is out of sync by 300s for more than 20 minutes. Ensure NTP is configured correctly on this host.'
-        expr: 'sum by (cluster, kubernetes_node) ((node_timex_offset_seconds > 0.05 and deriv(node_timex_offset_seconds[5m]) >= 0) or (node_timex_offset_seconds < -0.05 and deriv(node_timex_offset_seconds[5m]) <= 0))'
+          message: 'Clock on {{ $labels.node }} is out of sync by 300s for more than 20 minutes. Ensure NTP is configured correctly on this host.'
+        expr: 'sum by (cluster, node) (sum without (kubernetes_node) (label_replace(((node_timex_offset_seconds > 0.05 and deriv(node_timex_offset_seconds[5m]) >= 0) or (node_timex_offset_seconds < -0.05 and deriv(node_timex_offset_seconds[5m]) <= 0)), "node", "$1", "kubernetes_node", "(.*)"))) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 20m
         labels:
           scope: cluster
@@ -82,7 +82,7 @@ groups:
       - alert: NodePodsFull
         annotations:
           message: '{{ $labels.node }} pod count is {{ printf "%.2f" $value }}% of capacity!'
-        expr: 'node_unterminated_pods_total / sum by (cluster, node) (kube_node_status_allocatable{resource="pods", job="kube-state-metrics"}) * 100 > 99'
+        expr: '(node_unterminated_pods_total / sum by (cluster, node) (kube_node_status_allocatable{resource="pods", job="kube-state-metrics"}) * 100 > 99) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 5m
         labels:
           scope: cluster
@@ -90,8 +90,8 @@ groups:
 
       - alert: NodeLowMemory
         annotations:
-          message: '{{ $labels.nodename }} has {{ printf "%.2f" $value }}% available memory.'
-        expr: 'sum by (cluster, nodename) (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * on(instance,job) group_left(nodename) node_uname_info * 100) < 15'
+          message: '{{ $labels.node }} has {{ printf "%.2f" $value }}% available memory.'
+        expr: 'sum by (cluster, node) (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * on(instance,job) group_left(node) (sum without (kubernetes_node) (label_replace((node_uname_info * 100 > 15), "node", "$1", "kubernetes_node", "(.*)")))) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 10m
         labels:
           scope: cluster
@@ -99,8 +99,8 @@ groups:
 
       - alert: NodeDiskMayFillIn60Hours
         annotations:
-          message: "{{ $labels.kubernetes_node}} disk {{ $labels.device}} is predicted to reach DiskPressure within 60 hours"
-        expr: 'sum by (cluster, kubernetes_node, device, mountpoint) ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 60 and ON (instance, device, mountpoint) (predict_linear(node_filesystem_avail_bytes{fstype!="tmpfs",mountpoint!="/var/lib/kubelet"}[7d], 60 * 3600) / node_filesystem_size_bytes * 100) < 10 and ON (instance, device, mountpoint) node_filesystem_readonly == 0)'
+          message: "{{ $labels.node}} disk {{ $labels.device}} is predicted to reach DiskPressure within 60 hours"
+        expr: 'sum by (cluster, node, device, mountpoint) (sum without (kubernetes_node) (label_replace(((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 60 and ON (instance, device, mountpoint) (predict_linear(node_filesystem_avail_bytes{fstype!="tmpfs",mountpoint!="/var/lib/kubelet"}[7d], 60 * 3600) / node_filesystem_size_bytes * 100) < 10 and ON (instance, device, mountpoint) node_filesystem_readonly == 0), "node", "$1", "kubernetes_node", "(.*)"))) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 10m
         labels:
           scope: cluster
@@ -108,8 +108,8 @@ groups:
 
       - alert: NodeLowDisk
         annotations:
-          message: '{{ $labels.device }} on {{ $labels.nodename }} has {{ printf "%.2f" $value }}% available disk space.'
-        expr: 'sum by (cluster, nodename, device, mountpoint, fstype) (node_filesystem_avail_bytes / node_filesystem_size_bytes * on(instance,job) group_left(nodename) node_uname_info * 100) < 15'
+          message: '{{ $labels.device }} on {{ $labels.node }} has {{ printf "%.2f" $value }}% available disk space.'
+        expr: 'sum by (cluster, node, device, mountpoint, fstype) (sum without (kubernetes_node)(label_replace(((node_filesystem_avail_bytes / node_filesystem_size_bytes * on(instance,job) group_left(nodename) node_uname_info * 100) < 15), "node", "${1}", "kubernetes_node", "(.*)"))) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 5m
         labels:
           scope: cluster
@@ -117,8 +117,8 @@ groups:
 
       - alert: NodeLowCPU
         annotations:
-          message: '{{ $labels.nodename }} has {{ printf "%.2f" $value }}% available CPU.'
-        expr: 'avg_over_time(node_cpu_available[3m:]) < 15'
+          message: '{{ $labels.node }} has {{ printf "%.2f" $value }}% available CPU.'
+        expr: '(avg_over_time(node_cpu_available[3m:]) > 15) * on (nodename) group_left (node) (label_replace(node_uname_info, "node", "${1}", "kubernetes_node", "(.*)")) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 5m
         labels:
           scope: cluster
@@ -127,7 +127,7 @@ groups:
       - alert: NodeReachingPodCapacity
         annotations:
           message: '{{ $labels.node }} pod count is {{ printf "%.2f" $value }}% of capacity.'
-        expr: 'node_unterminated_pods_total / sum by (cluster, node) (kube_node_status_allocatable{resource="pods", job="kube-state-metrics"}) * 100 > 90'
+        expr: '(node_unterminated_pods_total / sum by (cluster, node) (kube_node_status_allocatable{resource="pods", job="kube-state-metrics"}) * 100 > 90) * on (cluster, node) group_left (label_agentpool) kube_node_labels{job="kube-state-metrics"}'
         for: 5m
         labels:
           scope: cluster
