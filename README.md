@@ -120,6 +120,7 @@ EOF
 | 2023-12-07 | v3.9.2  | Adjust node alerts for clock synchronization |
 | 2024-02-29 | v3.9.3  | Adjust Node and PVC storage alerts |
 | 2024-04-15 | v3.9.4  | Adjust Node alerts, report agentpool, standardize node label |
+| 2024-05-31 | v3.9.5  | Update container alerts |
 
 ## Upgrading
 
