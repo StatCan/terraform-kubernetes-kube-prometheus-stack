@@ -16,7 +16,7 @@ groups:
         annotations:
           message: 'Pod {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) is in CrashLoopBackOff.'
           runbook: "${runbook_base_url}/namespace-alert-runbooks/many-container-restarts/"
-        expr: 'sum by (cluster, container, pod, namespace) (max_over_time(kube_pod_container_status_waiting_reason{job="kube-state-metrics",reason="CrashLoopBackOff"}[5m]) >= 1)'
+        expr: 'sum by (cluster, container, pod, namespace) (max_over_time(kube_pod_container_status_waiting_reason{job="kube-state-metrics",reason="CrashLoopBackOff"}[15m]) >= 1)'
         for: 5m
         labels:
           scope: namespace
