@@ -122,6 +122,7 @@ EOF
 | 2024-04-15 | v3.9.4  | Adjust Node alerts, report agentpool, standardize node label |
 | 2024-05-31 | v3.9.5  | Update container alerts |
 | 2024-09-09 | v3.9.6  | Debounce ContainerCrashLooping |
+| 2024-12-03 | v3.9.7  | Add NodeDiskFull and fix/refactor some node alerts |
 
 ## Upgrading
 
